@@ -39,8 +39,8 @@ public class NovelDAO {
                     String novelID = rs.getString("novelID");
                     String name = rs.getString("name");
                     String author = rs.getString("author");
-                    String coverURL = rs.getString("coverURL");        
-                    NovelDTO dto=new NovelDTO(novelID, name, author, coverURL);
+                    String coverURL = rs.getString("coverURL");
+                    NovelDTO dto = new NovelDTO(novelID, name, author, coverURL);
                     if (this.list == null) {
                         this.list = new ArrayList<>();
                     }
@@ -58,5 +58,72 @@ public class NovelDAO {
                 con.close();
             }
         }
+    }
+
+    public boolean update(NovelDTO dto) throws SQLException {
+                Connection con = null;
+        PreparedStatement stm = null;
+        try {
+            //1. Connect DB
+            con = ConnectDB.makeConnection();
+            if (con != null) {
+                //2. Create SQL String
+                String sql = "UPDATE Novel "
+                        + "SET name = ?, "
+                        + "author = ?, "
+                        + "coverURL = ? "
+                        + "WHERE novelID = ?";
+                //3. Create statement and assign value to parameter
+                stm = con.prepareStatement(sql);     
+                stm.setString(1, dto.getName());
+                stm.setString(2, dto.getAuthor());
+                stm.setString(3, dto.getCoverURL());
+                stm.setString(4, dto.getNovelID());
+                //4. Execute query
+                int row = stm.executeUpdate();
+                if (row > 0) {
+                    return true;
+                }
+            }
+        } finally {
+            if (stm != null) {
+                stm.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+        return false;
+    }
+
+    public boolean delete(String novelID) throws SQLException {
+        Connection con = null;
+        PreparedStatement stm = null;
+        try {
+            //1. Connect DB
+            con = ConnectDB.makeConnection();
+            if (con != null) {
+                //2. Create SQL String
+                String sql = "DELETE FROM Novel "
+                        + "WHERE novelID = ?";
+                //3. Create statement and assign value to parameter
+                stm = con.prepareStatement(sql);
+                stm.setString(1, novelID);
+                //4. Execute query
+                int row = stm.executeUpdate();
+                //5. Process result
+                if (row > 0) {
+                    return true;
+                }
+            }
+        } finally {
+            if (stm != null) {
+                stm.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+        return false;
     }
 }
