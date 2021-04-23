@@ -5,10 +5,11 @@
  */
 package novel;
 
+
 /**
  *
  * @author Gray
  */
 public class NovelDAO {
-        
+
 }

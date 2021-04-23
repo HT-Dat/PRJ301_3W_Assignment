@@ -15,7 +15,7 @@ import java.sql.SQLException;
  */
 public class ConnectDB {
 
-        public static Connection makeConnetion() {
+        public static Connection makeConnection() {
                 try {
                         Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
                         String url = "jdbc:sqlserver://localhost:1433;databaseName=NorthwindCopyDB";
