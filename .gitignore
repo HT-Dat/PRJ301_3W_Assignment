@@ -9,6 +9,7 @@ build/
 nbbuild/
 dist/
 nbdist/
+nbproject/
 .nb-gradle/
 
 # End of https://www.toptal.com/developers/gitignore/api/netbeans
