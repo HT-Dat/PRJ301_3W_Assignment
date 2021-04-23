@@ -10,69 +10,73 @@ package novel;
  * @author Gray
  */
 public class NovelDTO {
-        private String novelID;
-        private String name;
-        private String author;
-        private String coverURL;
 
-        public NovelDTO() {
-        }
+    private String novelID;
+    private String name;
+    private String author;
+    private String coverURL;
 
-        /**
-         * @return the novelID
-         */
-        public String getNovelID() {
-                return novelID;
-        }
+    public NovelDTO(String novelID, String name, String author, String coverURL) {
+        this.novelID = novelID;
+        this.name = name;
+        this.author = author;
+        this.coverURL = coverURL;
+    }
 
-        /**
-         * @param novelID the novelID to set
-         */
-        public void setNovelID(String novelID) {
-                this.novelID = novelID;
-        }
+    /**
+     * @return the novelID
+     */
+    public String getNovelID() {
+        return novelID;
+    }
 
-        /**
-         * @return the name
-         */
-        public String getName() {
-                return name;
-        }
+    /**
+     * @param novelID the novelID to set
+     */
+    public void setNovelID(String novelID) {
+        this.novelID = novelID;
+    }
 
-        /**
-         * @param name the name to set
-         */
-        public void setName(String name) {
-                this.name = name;
-        }
+    /**
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
 
-        /**
-         * @return the author
-         */
-        public String getAuthor() {
-                return author;
-        }
+    /**
+     * @param name the name to set
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
 
-        /**
-         * @param author the author to set
-         */
-        public void setAuthor(String author) {
-                this.author = author;
-        }
+    /**
+     * @return the author
+     */
+    public String getAuthor() {
+        return author;
+    }
 
-        /**
-         * @return the coverURL
-         */
-        public String getCoverURL() {
-                return coverURL;
-        }
+    /**
+     * @param author the author to set
+     */
+    public void setAuthor(String author) {
+        this.author = author;
+    }
 
-        /**
-         * @param coverURL the coverURL to set
-         */
-        public void setCoverURL(String coverURL) {
-                this.coverURL = coverURL;
-        }
-        
-        
+    /**
+     * @return the coverURL
+     */
+    public String getCoverURL() {
+        return coverURL;
+    }
+
+    /**
+     * @param coverURL the coverURL to set
+     */
+    public void setCoverURL(String coverURL) {
+        this.coverURL = coverURL;
+    }
+
 }
