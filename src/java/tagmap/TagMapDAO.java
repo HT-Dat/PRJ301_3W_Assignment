@@ -3,8 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package bookmark;
+package tagmap;
 
+import bookmark.BookmarkDAO;
+import chapter.ChapterDAO;
+import comment.CommentDAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -12,11 +15,22 @@ import utils.ConnectDB;
 
 /**
  *
- * @author Gray
+ * @author hotie
  */
-public class BookmarkDAO {
-
-    public boolean delete(String novelID) throws SQLException {
+public class TagMapDAO {
+    public boolean delete(String novelID) throws SQLException{
+        BookmarkDAO bookmarkDAO=new BookmarkDAO();
+        bookmarkDAO.delete(novelID);
+        
+        CommentDAO commentDAO=new CommentDAO();
+        commentDAO.delete(novelID);
+        
+        ChapterDAO chapterDAO=new ChapterDAO();
+        chapterDAO.delete(novelID);
+        
+        TagMapDAO tagMapDAO=new TagMapDAO();
+        tagMapDAO.delete(novelID);
+       
         Connection con = null;
         PreparedStatement stm = null;
         try {
@@ -24,7 +38,7 @@ public class BookmarkDAO {
             con = ConnectDB.makeConnection();
             if (con != null) {
                 //2. Create SQL String
-                String sql = "DELETE FROM Bookmark "
+                String sql = "DELETE FROM TagMap "
                         + "WHERE novelID = ?";
                 //3. Create statement and assign value to parameter
                 stm = con.prepareStatement(sql);
