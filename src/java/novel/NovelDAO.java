@@ -23,12 +23,14 @@ import utils.ConnectDB;
  */
 public class NovelDAO {
 
-    List<NovelDTO> list;
+    public NovelDAO() {
+    }
 
-    public void getAll() throws SQLException {
+    public List<NovelDTO> getAll() throws SQLException {
         Connection con = null;
         PreparedStatement stm = null;
         ResultSet rs = null;
+        List<NovelDTO> list = new ArrayList<>();
         try {
             //1. Connect DB
             con = ConnectDB.makeConnection();
@@ -45,10 +47,7 @@ public class NovelDAO {
                     String author = rs.getString("author");
                     String coverURL = rs.getString("coverURL");
                     NovelDTO dto = new NovelDTO(novelID, name, author, coverURL);
-                    if (this.list == null) {
-                        this.list = new ArrayList<>();
-                    }
-                    this.list.add(dto);
+                    list.add(dto);
                 }
             }
         } finally {
@@ -62,6 +61,7 @@ public class NovelDAO {
                 con.close();
             }
         }
+        return list;
     }
 
     public boolean update(NovelDTO dto) throws SQLException {
@@ -112,7 +112,7 @@ public class NovelDAO {
 
         TagMapDAO tagMapDAO = new TagMapDAO();
         tagMapDAO.delete(novelID);
-        
+
         Connection con = null;
         PreparedStatement stm = null;
         try {
@@ -141,5 +141,201 @@ public class NovelDAO {
             }
         }
         return false;
+    }
+
+    public NovelDTO get(String novelID) throws SQLException {
+        Connection con = null;
+        PreparedStatement stm = null;
+        ResultSet rs = null;
+        NovelDTO dto = null;
+        try {
+            //1. Connect DB
+            con = ConnectDB.makeConnection();
+            if (con != null) {
+                //2. Create sql string
+                String sql = "SELECT * "
+                        + "FROM Novel "
+                        + "WHERE novelID = ?";
+                stm.setString(1, novelID);
+                //3. Create statement and assign values 
+                stm = con.prepareStatement(sql);
+                rs = stm.executeQuery();
+                if (rs.next()) {
+                    String name = rs.getString("name");
+                    String author = rs.getString("author");
+                    String coverURL = rs.getString("coverURL");
+                    dto = new NovelDTO(novelID, name, author, coverURL);
+                }
+            }
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (stm != null) {
+                stm.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+        return dto;
+    }
+
+    public boolean add(NovelDTO dto) throws SQLException {
+        Connection con = null;
+        PreparedStatement stm = null;
+        try {
+            //1. Connect DB
+            con = ConnectDB.makeConnection();
+            if (con != null) {
+                //2. Create SQL String
+                String sql = "INSERT INTO Products "
+                        + "VALUES(?, ?, ?, ?)";
+                //3. Create statement and assign value to parameter
+                stm = con.prepareStatement(sql);
+                stm.setString(1, dto.getNovelID());
+                stm.setString(2, dto.getName());
+                stm.setString(3, dto.getAuthor());
+                stm.setString(4, dto.getCoverURL());
+                //4. Execute query
+                int row = stm.executeUpdate();
+                //5. Process result
+                if (row > 0) {
+                    return true;
+                }
+            }
+        } finally {
+            if (stm != null) {
+                stm.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+        return false;
+    }
+
+    public NovelDTO getByUsernameAuthor(String author) throws SQLException {
+        Connection con = null;
+        PreparedStatement stm = null;
+        ResultSet rs = null;
+        NovelDTO dto = null;
+        try {
+            //1. Connect DB
+            con = ConnectDB.makeConnection();
+            if (con != null) {
+                //2. Create sql string
+                String sql = "SELECT * "
+                        + "FROM Novel "
+                        + "WHERE author = ?";
+                stm.setString(1, author);
+                //3. Create statement and assign values 
+                stm = con.prepareStatement(sql);
+                rs = stm.executeQuery();
+                if (rs.next()) {
+                    String novelID = rs.getString("novelID");
+                    String name = rs.getString("name");
+                    String coverURL = rs.getString("coverURL");
+                    dto = new NovelDTO(novelID, name, author, coverURL);
+                }
+            }
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (stm != null) {
+                stm.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+        return dto;
+    }
+
+    public List<NovelDTO> searchByName(String name) throws SQLException {
+        Connection con = null;
+        PreparedStatement stm = null;
+        ResultSet rs = null;
+        List<NovelDTO> list = new ArrayList<>();
+        try {
+            //1. Connect DB
+            con = ConnectDB.makeConnection();
+            if (con != null) {
+                //2. Create sql string
+                String sql = "SELECT * "
+                        + "FROM Novel "
+                        + "WHERE name = ?";
+                //3. Create statement and assign values 
+                stm = con.prepareStatement(sql);
+                rs = stm.executeQuery();
+                while (rs.next()) {
+                    String novelID = rs.getString("novelID");
+                    String author = rs.getString("author");
+                    String coverURL = rs.getString("coverURL");
+                    NovelDTO dto = new NovelDTO(novelID, name, author, coverURL);
+                    list.add(dto);
+                }
+            }
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (stm != null) {
+                stm.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+        return list;
+    }
+
+    public List<NovelDTO> searchByTag(String tag) throws SQLException {
+
+        List<NovelDTO> list = new ArrayList<>();
+        TagMapDAO tagMapDAO = new TagMapDAO();
+        List<String> novelIDList = tagMapDAO.getNovelID(tag);
+        for (String novelID : novelIDList) {
+            list.add(get(novelID));
+        }
+        return list;
+    }
+    public NovelDTO getByNameAndUsername(String name, String username) throws SQLException{
+        Connection con = null;
+        PreparedStatement stm = null;
+        ResultSet rs = null;
+        NovelDTO dto = null;
+        try {
+            //1. Connect DB
+            con = ConnectDB.makeConnection();
+            if (con != null) {
+                //2. Create sql string
+                String sql = "SELECT * "
+                        + "FROM Novel "
+                        + "WHERE name = ? AND author = ?";
+                stm.setString(1, name);
+                stm.setString(2, username);
+                //3. Create statement and assign values 
+                stm = con.prepareStatement(sql);
+                rs = stm.executeQuery();
+                if (rs.next()) {
+                    String novelID = rs.getString("novelID");
+                    String coverURL = rs.getString("coverURL");
+                    dto = new NovelDTO(novelID, name, username, coverURL);
+                }
+            }
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (stm != null) {
+                stm.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+        return dto;
     }
 }
