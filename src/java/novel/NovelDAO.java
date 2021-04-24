@@ -5,12 +5,16 @@
  */
 package novel;
 
+import bookmark.BookmarkDAO;
+import chapter.ChapterDAO;
+import comment.CommentDAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import tagmap.TagMapDAO;
 import utils.ConnectDB;
 
 /**
@@ -61,7 +65,7 @@ public class NovelDAO {
     }
 
     public boolean update(NovelDTO dto) throws SQLException {
-                Connection con = null;
+        Connection con = null;
         PreparedStatement stm = null;
         try {
             //1. Connect DB
@@ -74,7 +78,7 @@ public class NovelDAO {
                         + "coverURL = ? "
                         + "WHERE novelID = ?";
                 //3. Create statement and assign value to parameter
-                stm = con.prepareStatement(sql);     
+                stm = con.prepareStatement(sql);
                 stm.setString(1, dto.getName());
                 stm.setString(2, dto.getAuthor());
                 stm.setString(3, dto.getCoverURL());
@@ -97,6 +101,18 @@ public class NovelDAO {
     }
 
     public boolean delete(String novelID) throws SQLException {
+        BookmarkDAO bookmarkDAO = new BookmarkDAO();
+        bookmarkDAO.delete(novelID);
+
+        CommentDAO commentDAO = new CommentDAO();
+        commentDAO.delete(novelID);
+
+        ChapterDAO chapterDAO = new ChapterDAO();
+        chapterDAO.delete(novelID);
+
+        TagMapDAO tagMapDAO = new TagMapDAO();
+        tagMapDAO.delete(novelID);
+        
         Connection con = null;
         PreparedStatement stm = null;
         try {

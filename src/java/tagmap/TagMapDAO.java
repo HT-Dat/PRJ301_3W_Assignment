@@ -19,18 +19,6 @@ import utils.ConnectDB;
  */
 public class TagMapDAO {
     public boolean delete(String novelID) throws SQLException{
-        BookmarkDAO bookmarkDAO=new BookmarkDAO();
-        bookmarkDAO.delete(novelID);
-        
-        CommentDAO commentDAO=new CommentDAO();
-        commentDAO.delete(novelID);
-        
-        ChapterDAO chapterDAO=new ChapterDAO();
-        chapterDAO.delete(novelID);
-        
-        TagMapDAO tagMapDAO=new TagMapDAO();
-        tagMapDAO.delete(novelID);
-       
         Connection con = null;
         PreparedStatement stm = null;
         try {
