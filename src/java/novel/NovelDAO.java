@@ -303,11 +303,13 @@ public class NovelDAO {
         return list;
     }
 
-    public List<NovelDTO> searchByTag(String tag) throws SQLException, ClassNotFoundException {
+    public List<NovelDTO> searchByTag(String tagID) throws SQLException, ClassNotFoundException {
 
         List<NovelDTO> list = new ArrayList<>();
         TagMapDAO tagMapDAO = new TagMapDAO();
-        List<String> novelIDList = tagMapDAO.getNovelID(tag);
+        //find all tagMap instances which include the tagID from parameter
+        List<String> novelIDList = tagMapDAO.getNovelID(tagID);
+        //for each novelID found, create a list with novels that have these ID
         for (String novelID : novelIDList) {
             list.add(get(novelID));
         }

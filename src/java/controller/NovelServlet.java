@@ -86,6 +86,25 @@ public class NovelServlet extends HttpServlet {
                         request.setAttribute("chapterList", chapterList);
                         request.setAttribute("novel", ndto);
                         request.getRequestDispatcher("NovelInfo.jsp").forward(request, response);
+                } else if (action.equals("SearchByTag")) {
+                        //get tagID to search for tag
+                        String tid = request.getParameter("tid");
+                        TagDTO tag = tDAO.getTag(tid);
+                        //if tag is found, find all novel with this tag
+                        if(tag != null) {
+                                ArrayList<NovelDTO> novelWithTag = (ArrayList<NovelDTO>) nDAO.searchByTag(tid);
+                                if(novelWithTag.size() > 0) {
+                                        request.setAttribute("size", novelWithTag.size());
+                                        request.setAttribute("novelList", novelWithTag);
+                                        request.setAttribute("tag", tDAO.getTag(tid));
+                                } else {
+                                        request.setAttribute("NoNovelError", "No novels could be found");
+                                }
+                                request.getRequestDispatcher("Homepage.jsp").forward(request, response);
+                        } else {
+                                request.setAttribute("TAGNOTFOUNDERROR", "Tag not found");
+                                request.getRequestDispatcher("Error.jsp").forward(request, response);
+                        }
                 }
         }
         

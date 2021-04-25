@@ -67,7 +67,7 @@ public class TagMapDAO {
                 stm = con.prepareStatement(sql);
                 stm.setString(1, tagID);
                 //4. Execute query
-                rs = stm.executeQuery(sql);
+                rs = stm.executeQuery();
                 //5. Process result
                 while (rs.next()) {
                     String novelID = rs.getString("novelID");

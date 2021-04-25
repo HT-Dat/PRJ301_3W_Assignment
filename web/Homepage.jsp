@@ -25,7 +25,7 @@
                                         <c:forEach begin="0" end="4">
                                                 <div class=column>
                                                         <c:forEach items="${applicationScope.tagList}" var="tag" begin="${begin}" end="${end}">
-                                                                <li><a class="tag" href="NovelServlet?a=searchtag&id=${tag.tagID}"><c:out value="${tag.getTagName()}"/></a></li>
+                                                                <li><a class="tag" href="NovelServlet?action=SearchByTag&tid=${tag.tagID}"><c:out value="${tag.getTagName()}"/></a></li>
                                                                 </c:forEach>
                                                 </div>
                                                 <c:set var="begin" value="${begin+7}"/>
@@ -62,7 +62,7 @@
                 <%--Properly headings for each action--%>
                 <div class="n-container">
                         <c:if test="${tag != null}">
-                                <h1 style="margin-left: 2%;">Novels with tag: ${tag.tagName}</h1>
+                                <h1 style="margin-left: 2%;">We found ${size} novel(s) with tag: ${tag.tagName}</h1>
                         </c:if>
                         <c:if test="${BookmarkFlag != null}">
                                 <h1 style="color:red; font-size: 150%; text-align: center">${BookmarkFlag}</h1>
@@ -92,7 +92,7 @@
                         </c:if>
                         <%--If your novel list is emty, ask if you want to add a novel or return to homepage --%>
                         <c:if test="${NoNovelError != null}">
-                                <h2 style="color: red">Sorry, you don't have any novel yet!</h2>
+                                <h2 style="color: red">Sorry, no novel with this tag is found!!</h2>
                                 <c:if test="${flag != null}">
                                         <h1 style="text-align: center"><a href="NovelServlet?a=n_form" style="font-size: 250%; border: dashed 7px; line-height: 5; padding: 10%;">Add a novel</a></h1>
                                         <h1><a class="home" href="NovelServlet">Return to homepage</a></h1>
