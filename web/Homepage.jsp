@@ -70,14 +70,14 @@
                         <c:if test="${addFlag != null}">
                                 <h1 style="color:red; font-size: 150%; text-align: center">Your Novels</h1>
                         </c:if>
-                        <c:if test="${novelList} != null">
+                        <c:if test="${novelList != null}">
                                 <ul class="n-list">
                                         <c:forEach items="${novelList}" var="novel">
-                                                <li class="n-item">
+                                                <li class="n-listitem">
                                                         <a href="NovelServlet?action=NovelInfo&nid=${novel.novelID}"><img class="cover" src="${pageContext.request.contextPath}/images/covers/${novel.coverURL}"/></a>
                                                         <a class="n-title" href="NovelServlet?action=NovelInfo&n=${novel.novelID}">${novel.novelName}</a>
-                                                        <p>${novel.author.getUsername()}</p>
-                                                        <c:if test="${user.isAdmin == true || user.username.equals(novel.author.username)}">
+                                                        <p>${novel.author.getUserName()}</p>
+                                                        <c:if test="${addFlag != null}">
                                                                 <a href="ChapterServlet?action=AddChapterForm&nid=${novel.novelID}">Add new chapter</a>
                                                         </c:if>
                                                         <c:if test="${user.isAdmin == true || user.username.equals(novel.author.username)}">

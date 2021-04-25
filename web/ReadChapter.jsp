@@ -26,7 +26,7 @@
                     <c:out value="${tagList}" />
                     <c:forEach begin="0" end="4">
                         <div class=column>
-                            <c:forEach items="${applicationScope.tagListObj}" var="tag" begin="${begin}" end="${end}">
+                            <c:forEach items="${applicationScope.tagList}" var="tag" begin="${begin}" end="${end}">
                                 <li><a class="tag" href="NovelServlet?a=searchtag&id=${tag.tagID}"><c:out value="${tag.getTagName()}"/></a></li>
                             </c:forEach>
                         </div>
