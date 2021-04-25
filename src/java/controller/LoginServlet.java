@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author Gray
  */
 @WebServlet(name = "AccountServlet", urlPatterns = {"/AccountServlet"})
-public class AccountServlet extends HttpServlet {
+public class LoginServlet extends HttpServlet {
 
         /**
          * Processes requests for both HTTP <code>GET</code> and
