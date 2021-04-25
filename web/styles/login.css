@@ -33,7 +33,7 @@ form {
 }
 a {
   text-decoration: none;
-  color: #4caf50;
+  color: #4faf4c;
 }
 
 input[type="text"],
@@ -62,4 +62,7 @@ input[type="submit"] {
   cursor: pointer;
   width: 50%;
   border-radius: 7px;
+}
+#register{
+  padding-top: 20px;
 }

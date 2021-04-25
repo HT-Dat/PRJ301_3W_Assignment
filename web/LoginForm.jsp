@@ -14,5 +14,9 @@
             <input type="password" name="password" />
             <input type="submit" name="login"  />
         </form>
+        <div id="register">
+            Don't have account?
+            <a href="RegisterServlet">Sign Up</a>
+        </div>
     </body>
 </html>
