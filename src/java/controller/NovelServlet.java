@@ -71,7 +71,7 @@ public class NovelServlet extends HttpServlet {
                         request.getRequestDispatcher("Homepage.jsp").forward(request, response);
                 } else if (action.equals("NovelInfo")) {
                         String nid = request.getParameter("nid");
-                        ArrayList<TagDTO> tList = tDAO.getAllTags();
+                        ArrayList<TagDTO> tList = tDAO.getTagList(nid);
                         //get novel by id
                         NovelDTO ndto = nDAO.get(nid);
                         //check if reader login or not to show bookmark
