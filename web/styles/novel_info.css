@@ -20,14 +20,15 @@ body {
     width: 100%;
     height: 100%;
     text-align: left;
-    background-color: antiquewhite;
+    background-color: #e9eaed;
 }
 
 .container {
-    width: 80%;
+    width: 800px;
     padding-right: 15px;
     padding-left: 15px;
     margin: 0 auto;
+    
 }
 
 .header {
@@ -44,6 +45,8 @@ body {
     height: 29.5rem;
     border: 1px solid rgba(0, 0, 0, 0.125);
     border-radius: 0 0 calc(0.25rem - 1px) calc(0.25rem - 1px);
+    background-color: white;
+    text-align: center;
 }
 
 .cover {
@@ -58,6 +61,7 @@ body {
     height: 29.5rem;
     border: 1px solid rgba(0, 0, 0, 0.125);
     border-radius: 0 0 calc(0.25rem - 1px) calc(0.25rem - 1px);
+    background-color: white;
 }
 
 .content-row {
