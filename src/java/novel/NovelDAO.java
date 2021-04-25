@@ -153,7 +153,6 @@ public class NovelDAO {
         Connection con = null;
         PreparedStatement stm = null;
         ResultSet rs = null;
-        NovelDTO dto = null;
         try {
             //1. Connect DB
             con = ConnectDB.makeConnection();
@@ -162,9 +161,9 @@ public class NovelDAO {
                 String sql = "SELECT * "
                         + "FROM Novel "
                         + "WHERE novelID = ?";
-                stm.setString(1, novelID);
                 //3. Create statement and assign values 
                 stm = con.prepareStatement(sql);
+                stm.setString(1, novelID);
                 rs = stm.executeQuery();
                 if (rs.next()) {
                     String name = rs.getString("name");
@@ -172,7 +171,8 @@ public class NovelDAO {
                     AccountDAO dao = new AccountDAO();
                     AccountDTO author = dao.getAccountByUsername(AuthorName);
                     String coverURL = rs.getString("coverURL");
-                    dto = new NovelDTO(novelID, name, author, coverURL);
+                    NovelDTO dto = new NovelDTO(novelID, name, author, coverURL);
+                    return dto;
                 }
             }
         } finally {
@@ -186,7 +186,7 @@ public class NovelDAO {
                 con.close();
             }
         }
-        return dto;
+        return null;
     }
 
     public boolean add(NovelDTO dto) throws SQLException {
