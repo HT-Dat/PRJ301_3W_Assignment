@@ -58,7 +58,7 @@
                         </div>
                 </div>
                 <c:set var="user" value="${sessionScope.user}"/>
-
+                
                 <%--Properly headings for each action--%>
                 <div class="n-container">
                         <c:if test="${tag != null}">
@@ -70,7 +70,9 @@
                         <c:if test="${addFlag != null}">
                                 <h1 style="color:red; font-size: 150%; text-align: center">Your Novels</h1>
                         </c:if>
-                        <c:if test="${novelList != null}">
+                        <c:if test="${not empty novelList}">
+                            <% 
+                                System.out.println(request.getAttribute("novelList")); %>
                                 <ul class="n-list">
                                         <c:forEach items="${novelList}" var="novel">
                                                 <li class="n-listitem">
