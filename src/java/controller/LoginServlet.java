@@ -9,6 +9,7 @@ import account.AccountDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -17,6 +18,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import novel.NovelDAO;
+import novel.NovelDTO;
 
 /**
  *
@@ -50,6 +53,7 @@ public class LoginServlet extends HttpServlet {
             String username = request.getParameter("username");
             String pass = request.getParameter("password");
             AccountDAO dao = new AccountDAO();
+            NovelDAO ndao = new NovelDAO();
             
             //check login
             boolean isValid = dao.checkLogin(username, pass);
@@ -59,6 +63,7 @@ public class LoginServlet extends HttpServlet {
                 request.setAttribute("success", isValid);
                 request.setAttribute("username", username);
                 request.getRequestDispatcher("LoginForm.jsp").forward(request, response);
+                
             }
             
             //else redirect to NovelServlet
@@ -66,7 +71,9 @@ public class LoginServlet extends HttpServlet {
                 AccountDAO aDAO = new AccountDAO();
                 HttpSession session = request.getSession();
                 session.setAttribute("user", aDAO.getAccountByUsername(username));
-                response.sendRedirect("NovelServlet");
+                ArrayList<NovelDTO> novelList = (ArrayList<NovelDTO>) ndao.getAll();
+                request.setAttribute("novelList", novelList);
+                request.getRequestDispatcher("Homepage.jsp").forward(request, response);
             }
         }
         else if(action.equals("logout")){
