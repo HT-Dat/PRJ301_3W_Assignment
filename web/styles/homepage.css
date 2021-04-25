@@ -180,7 +180,7 @@ li:hover {
 }
 
 .n-container {
-    width: 50%;
+    width: 800px;
     float: left;
     background-color: white;
     margin-left: 20%;
@@ -219,11 +219,11 @@ li:hover {
 
 .side-box {
     float: left;
-    width: 10%;
+    width: 200px;
     background-color: #f7f0e6;
     margin-left: 5px;
     padding-top: 10px;
-    padding-bottom: 63%;
+    padding-bottom: 125vh;
 }
 
 .side-box > a {

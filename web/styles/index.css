@@ -29,7 +29,7 @@ a {
 
 .navbar {
     position: sticky;
-    background-color: rgb(212, 212, 212);
+    background-color: #ff530d;
     width: 100%;
     float: none;
     height: 2.8rem;
@@ -50,8 +50,8 @@ a {
     float: left;
     padding: 14px 17px;
     left: 2%;
-    background-color: rgb(255, 255, 255);
-    border-right: 1px solid black;
+    background-color: #ff6e33;
+
     height: 2.77rem;
 }
 .drop-btn {
@@ -103,7 +103,6 @@ li:hover {
 
 .search-container {
     float: right;
-    margin-right: 10%;
     padding: 14px 17px;
 }
 
@@ -131,7 +130,9 @@ li:hover {
 }
 
 .login-btn {
-    border-radius: 10px;
+    border-radius: 5px;
+    padding-left: 20px;
+    padding-right: 20px;
 }
 
 .login-btn:hover {
