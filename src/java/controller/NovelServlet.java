@@ -5,15 +5,17 @@
  */
 package controller;
 
+import account.AccountDTO;
 import bookmark.BookmarkDAO;
 import chapter.ChapterDAO;
+import chapter.ChapterDTO;
 import comment.CommentDAO;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
@@ -56,24 +58,41 @@ public class NovelServlet extends HttpServlet {
                 NovelDAO nDAO = new NovelDAO();
                 TagDAO tDAO = new TagDAO();
                 ChapterDAO cDAO = new ChapterDAO();
-               CommentDAO cmDAO = new CommentDAO();
-               BookmarkDAO bDAO = new BookmarkDAO();
-               ArrayList<TagDTO> tagList = tDAO.getAllTags();
-               getServletContext().setAttribute("tagList", tagList);
-               
-               HttpSession session = request.getSession(false);
-               //action = null -> display homepage.jsp
-               if(action == null) {
+                CommentDAO cmDAO = new CommentDAO();
+                BookmarkDAO bDAO = new BookmarkDAO();
+                ArrayList<TagDTO> tagList = tDAO.getAllTags();
+                getServletContext().setAttribute("tagList", tagList);
+                
+                HttpSession session = request.getSession(false);
+                //action = null -> display homepage.jsp
+                if (action == null) {
                         ArrayList<NovelDTO> novelList = (ArrayList<NovelDTO>) nDAO.getAll();
                         request.setAttribute("novelList", novelList);
                         request.getRequestDispatcher("Homepage.jsp").forward(request, response);
-               }
+                } else if (action.equals("NovelInfo")) {
+                        String nid = request.getParameter("nid");
+                        ArrayList<TagDTO> tList = tDAO.getAllTags();
+                        //get novel by id
+                        NovelDTO ndto = nDAO.get(nid);
+                        //check if reader login or not to show bookmark
+                        AccountDTO user = (AccountDTO) session.getAttribute("user");
+                        LinkedList<ChapterDTO> chapterList = cDAO.getChapters(nid);
+                        //if reader logged in, check if they bookmark this novel or not
+                        if (user != null) {
+                                boolean isBookmarked = bDAO.isBookmarked(user.getUserName(), nid);
+                                request.setAttribute("bookmark", isBookmarked);
+                        }
+                        request.setAttribute("taglist", tList);
+                        request.setAttribute("chapterList", chapterList);
+                        request.setAttribute("novel", ndto);
+                        request.getRequestDispatcher("NovelInfo.jsp").forward(request, response);
+                }
         }
         
         private String getFileName(Part part) {
                 for (String content : part.getHeader("content-disposition").split(";")) {
-                        if(content.trim().startsWith("filename")) {
-                                return content.substring(content.indexOf('=')+1).trim().replace("\"", "");
+                        if (content.trim().startsWith("filename")) {
+                                return content.substring(content.indexOf('=') + 1).trim().replace("\"", "");
                         }
                 }
                 return null;
