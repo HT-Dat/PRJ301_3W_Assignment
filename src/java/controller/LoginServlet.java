@@ -42,7 +42,7 @@ public class LoginServlet extends HttpServlet {
         
         //if a==null -> redirect to login_form.jsp
         if(action == null){
-            response.sendRedirect("login_form.jsp");
+            response.sendRedirect("LoginForm.jsp");
         }
         
         //if a = login
