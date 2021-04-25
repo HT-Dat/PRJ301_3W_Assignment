@@ -80,9 +80,9 @@
                                                         <c:if test="${addFlag != null}">
                                                                 <a href="ChapterServlet?action=AddChapterForm&nid=${novel.novelID}">Add new chapter</a>
                                                         </c:if>
-                                                        <c:if test="${user.isAdmin == true || user.username.equals(novel.author.username)}">
+                                                        <c:if test="${user.isAdmin == true || user.userName.equals(novel.author.userName)}">
                                                                 <p><a href="NovelServlet?action=DeleteNovel&nid=${novel.novelID}" onclick="return confirm('This action will remove all chapters in this novel.\nAre you sure ?')" class="del">Delete</a></p>
-                                                                <c:if test="${user.username.equals(novel.author.username)}">
+                                                                <c:if test="${user.userName.equals(novel.author.userName)}">
                                                                         <p><a href="NovelServlet?action=UpdateNovelForm&nid=${novel.novelID}" class="del">Update</a></p>
                                                                 </c:if>
                                                         </c:if>
@@ -109,7 +109,7 @@
                         <c:when test="${user != null}">
                                 <div class="side-box">
                                         <a href="NovelServlet?action=AddNovelForm">Add a novel</a><br>
-                                        <a href="NovelServlet?action=YourNovelList&u=${user.username}">Your novels</a><br>
+                                        <a href="NovelServlet?action=YourNovelList&u=${user.userName}">Your novels</a><br>
                                         <a href="BookmarkServlet?action=BookmarkList">Bookmark</a><br>
                                 </div>
                         </c:when>

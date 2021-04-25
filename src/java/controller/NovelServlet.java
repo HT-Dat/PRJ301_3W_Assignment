@@ -64,8 +64,7 @@ public class NovelServlet extends HttpServlet {
                HttpSession session = request.getSession(false);
                //action = null -> display homepage.jsp
                if(action == null) {
-                       ArrayList<NovelDTO> novelList = (ArrayList<NovelDTO>) nDAO.getAll();
-                       System.out.println(novelList);
+                        ArrayList<NovelDTO> novelList = (ArrayList<NovelDTO>) nDAO.getAll();
                         request.setAttribute("novelList", novelList);
                         request.getRequestDispatcher("Homepage.jsp").forward(request, response);
                }
