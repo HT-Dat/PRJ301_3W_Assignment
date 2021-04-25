@@ -263,7 +263,7 @@ public class NovelDAO {
         return dto;
     }
 
-    public List<NovelDTO> searchByName(String name) throws SQLException, ClassNotFoundException {
+    public List<NovelDTO> searchByName(String keyword) throws SQLException, ClassNotFoundException {
         Connection con = null;
         PreparedStatement stm = null;
         ResultSet rs = null;
@@ -275,17 +275,19 @@ public class NovelDAO {
                 //2. Create sql string
                 String sql = "SELECT * "
                         + "FROM Novel "
-                        + "WHERE name = ?";
+                        + "WHERE name LIKE ?";
                 //3. Create statement and assign values 
                 stm = con.prepareStatement(sql);
+                stm.setString(1, "%" + keyword + "%");
                 rs = stm.executeQuery();
                 while (rs.next()) {
                     AccountDAO dao = new AccountDAO();
                     String novelID = rs.getString("novelID");
+                    String novelName = rs.getString("name");
                     String AuthorName = rs.getString("author");
                     AccountDTO author = dao.getAccountByUsername(AuthorName);
                     String coverURL = rs.getString("coverURL");
-                    NovelDTO dto = new NovelDTO(novelID, name, author, coverURL);
+                    NovelDTO dto = new NovelDTO(novelID, novelName, author, coverURL);
                     list.add(dto);
                 }
             }

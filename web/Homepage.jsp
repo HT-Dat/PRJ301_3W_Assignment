@@ -51,18 +51,22 @@
                         </c:choose>
                         <div class="search-container">
                                 <form action="NovelServlet" method="post">
-                                        <input type="hidden" name="a" value="searchname"/>
-                                        <input type="text" placeholder="Search..." id="search-bar" name="nameSearch">
+                                        <%--Search for which have inputted character(s) in their name--%>
+                                        <input type="hidden" name="action" value="SearchByName"/>
+                                        <input type="text" placeholder="Search..." id="search-bar" name="keyword">
                                         <button id="search-btn" type="submit"><i class="fa fa-search"></i></button>
                                 </form>
                         </div>
                 </div>
                 <c:set var="user" value="${sessionScope.user}"/>
-                
+
                 <%--Properly headings for each action--%>
                 <div class="n-container">
                         <c:if test="${tag != null}">
                                 <h1 style="margin-left: 2%;">We found ${size} novel(s) with tag: ${tag.tagName}</h1>
+                        </c:if>
+                        <c:if test="${keyword != null}">
+                                <h1 style="margin-left: 2%;">We found ${size} novel(s) with keyword(s): ${keyword}</h1>
                         </c:if>
                         <c:if test="${BookmarkFlag != null}">
                                 <h1 style="color:red; font-size: 150%; text-align: center">${BookmarkFlag}</h1>
@@ -90,14 +94,18 @@
                                         </c:forEach>
                                 </ul>
                         </c:if>
-                        <%--If your novel list is emty, ask if you want to add a novel or return to homepage --%>
+                        <%--If no novel could be found, ask if you want to add a novel or return to homepage --%>
                         <c:if test="${NoNovelError != null}">
                                 <h2 style="color: red">Sorry, no novel with this tag is found!!</h2>
                                 <c:if test="${flag != null}">
-                                        <h1 style="text-align: center"><a href="NovelServlet?a=n_form" style="font-size: 250%; border: dashed 7px; line-height: 5; padding: 10%;">Add a novel</a></h1>
+                                        <h1 style="text-align: center"><a href="NovelServlet?action=AddNovelForm" style="font-size: 250%; border: dashed 7px; line-height: 5; padding: 10%;">Add a novel</a></h1>
                                         <h1><a class="home" href="NovelServlet">Return to homepage</a></h1>
                                 </c:if>
                         </c:if>
+                        <c:if test="${NoNovelNameError != null}">
+                                <h2 style="color: red">${NoNovelNameError}</h2>
+                                <h1><a class="home" href="NovelServlet">Return to homepage</a></h1>
+                        </c:if>             
                         <%--If your bookmark is empty--%>
                         <c:if test="${EMPTYBOOKMARK != null}">
                                 <h1 style="color:red">${EMPTYBOOKMARK}</h1>

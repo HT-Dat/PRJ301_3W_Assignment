@@ -79,7 +79,7 @@
                                 <div class="content-row" id="tags">
                                         <b>Tags:</b> 
                                         <c:forEach items="${taglist}" var="tag">
-                                                <a class="tag-item"  href="NovelServlet?action=SearchbyTag&tid=${tag.tagID}">${tag.tagName}</a>
+                                                <a class="tag-item"  href="NovelServlet?action=SearchByTag&tid=${tag.tagID}">${tag.tagName}</a>
                                         </c:forEach>
                                 </div>
                                 <div class="content-row" id="bookmark">

@@ -11,6 +11,7 @@ import chapter.ChapterDAO;
 import chapter.ChapterDTO;
 import comment.CommentDAO;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -105,6 +106,20 @@ public class NovelServlet extends HttpServlet {
                                 request.setAttribute("TAGNOTFOUNDERROR", "Tag not found");
                                 request.getRequestDispatcher("Error.jsp").forward(request, response);
                         }
+                } else if (action.equals("SearchByName")) {
+                        String keyword = request.getParameter("keyword");
+                        //In case novel is in other languages than English, name are translated to an array of bytes with 
+                        //charsets "ISO_8859_1" rather than "UTF-8"
+                        keyword = new String(keyword.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
+                        ArrayList<NovelDTO> nList = (ArrayList<NovelDTO>) nDAO.searchByName(keyword);
+                        if(nList.size() > 0) {
+                                request.setAttribute("novelList", nList);
+                                request.setAttribute("size", nList.size());
+                                request.setAttribute("keyword", keyword);
+                        } else {
+                                request.setAttribute("NoNovelNameError", "Sorry, we don't find any novel with keyword" + keyword);
+                        }
+                        request.getRequestDispatcher("Homepage.jsp").forward(request, response);
                 }
         }
         
