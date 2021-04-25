@@ -12,8 +12,8 @@
 		<table style="with: 50%">
  
 			<tr>
-				<td>Email</td>
-				<td><input type="text" name="Email" /></td>
+				<td>UserName</td>
+				<td><input type="text" name="username" /></td>
 			</tr>
 				<tr>
 				<td>Password</td>
@@ -23,3 +23,4 @@
        <input type="submit" name="login"  />
 </form>
 </body>
+</html>
