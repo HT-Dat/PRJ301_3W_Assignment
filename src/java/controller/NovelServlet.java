@@ -5,19 +5,39 @@
  */
 package controller;
 
+import bookmark.BookmarkDAO;
+import chapter.ChapterDAO;
+import comment.CommentDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
+import novel.NovelDAO;
+import novel.NovelDTO;
+import tag.TagDAO;
+import tag.TagDTO;
 
 /**
  *
  * @author Gray
  */
 @WebServlet(name = "NovelServlet", urlPatterns = {"/NovelServlet"})
+@MultipartConfig(
+        fileSizeThreshold = 10 * 1024 * 1024,
+        maxFileSize = 1024 * 1024 * 50,
+        maxRequestSize = 1024 * 1024 * 100
+)
 public class NovelServlet extends HttpServlet {
 
         /**
@@ -30,20 +50,34 @@ public class NovelServlet extends HttpServlet {
          * @throws IOException if an I/O error occurs
          */
         protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-                throws ServletException, IOException {
+                throws ServletException, IOException, SQLException, ClassNotFoundException {
                 response.setContentType("text/html;charset=UTF-8");
-                try (PrintWriter out = response.getWriter()) {
-                        /* TODO output your page here. You may use following sample code. */
-                        out.println("<!DOCTYPE html>");
-                        out.println("<html>");
-                        out.println("<head>");
-                        out.println("<title>Servlet NovelServlet</title>");                        
-                        out.println("</head>");
-                        out.println("<body>");
-                        out.println("<h1>Servlet NovelServlet at " + request.getContextPath() + "</h1>");
-                        out.println("</body>");
-                        out.println("</html>");
+                String info = "NovelInfo.jsp";
+                String action = request.getParameter("action");
+                NovelDAO nDAO = new NovelDAO();
+                TagDAO tDAO = new TagDAO();
+                ChapterDAO cDAO = new ChapterDAO();
+               CommentDAO cmDAO = new CommentDAO();
+               BookmarkDAO bDAO = new BookmarkDAO();
+               ArrayList<TagDTO> tagList = tDAO.getAllTags();
+               getServletContext().setAttribute("tagList", tagList);
+               
+               HttpSession session = request.getSession(false);
+               //action = null -> display homepage.jsp
+               if(action == null) {
+                       ArrayList<NovelDTO> novelList = (ArrayList<NovelDTO>) nDAO.getAll();
+                        request.setAttribute("novelList", novelList);
+                        request.getRequestDispatcher("Homepage.jsp").forward(request, response);
+               }
+        }
+        
+        private String getFileName(Part part) {
+                for (String content : part.getHeader("content-disposition").split(";")) {
+                        if(content.trim().startsWith("filename")) {
+                                return content.substring(content.indexOf('=')+1).trim().replace("\"", "");
+                        }
                 }
+                return null;
         }
 
         // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -58,7 +92,15 @@ public class NovelServlet extends HttpServlet {
         @Override
         protected void doGet(HttpServletRequest request, HttpServletResponse response)
                 throws ServletException, IOException {
-                processRequest(request, response);
+                try {
+                        try {
+                                processRequest(request, response);
+                        } catch (ClassNotFoundException ex) {
+                                Logger.getLogger(NovelServlet.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                } catch (SQLException ex) {
+                        Logger.getLogger(NovelServlet.class.getName()).log(Level.SEVERE, null, ex);
+                }
         }
 
         /**
@@ -72,7 +114,13 @@ public class NovelServlet extends HttpServlet {
         @Override
         protected void doPost(HttpServletRequest request, HttpServletResponse response)
                 throws ServletException, IOException {
-                processRequest(request, response);
+                try {
+                        processRequest(request, response);
+                } catch (SQLException ex) {
+                        Logger.getLogger(NovelServlet.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ClassNotFoundException ex) {
+                        Logger.getLogger(NovelServlet.class.getName()).log(Level.SEVERE, null, ex);
+                }
         }
 
         /**

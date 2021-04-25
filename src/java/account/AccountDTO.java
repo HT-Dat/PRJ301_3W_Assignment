@@ -11,93 +11,112 @@ package account;
  */
 public class AccountDTO {
 
-    private String userName;
-    private String email;
-    private String password;
-    private boolean isAdmin;
-    private String avatarURL;
+        private String userName;
+        private String email;
+        private String password;
+        private String name;
+        private boolean isAdmin;
+        private String avatarURL;
 
-    public AccountDTO(String userName, String email, String password, boolean isAdmin, String avatarURL) {
-        this.userName = userName;
-        this.email = email;
-        this.password = password;
-        this.isAdmin = isAdmin;
-        this.avatarURL = avatarURL;
-    }
+        public AccountDTO() {
+        }
 
-    /**
-     * @return the userName
-     */
-    public String getUserName() {
-        return userName;
-    }
+        public AccountDTO(String userName, String email, String password, String name, boolean isAdmin, String avatarURL) {
+                this.userName = userName;
+                this.email = email;
+                this.password = password;
+                this.name = name;
+                this.isAdmin = isAdmin;
+                this.avatarURL = avatarURL;
+        }
 
-    /**
-     * @param userName the userName to set
-     */
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
+        /**
+         * @return the userName
+         */
+        public String getUserName() {
+                return userName;
+        }
 
-    /**
-     * @return the email
-     */
-    public String getEmail() {
-        return email;
-    }
+        /**
+         * @param userName the userName to set
+         */
+        public void setUserName(String userName) {
+                this.userName = userName;
+        }
 
-    /**
-     * @param email the email to set
-     */
-    public void setEmail(String email) {
-        this.email = email;
-    }
+        /**
+         * @return the email
+         */
+        public String getEmail() {
+                return email;
+        }
 
-    /**
-     * @return the password
-     */
-    public String getPassword() {
-        return password;
-    }
+        /**
+         * @param email the email to set
+         */
+        public void setEmail(String email) {
+                this.email = email;
+        }
 
-    /**
-     * @param password the password to set
-     */
-    public void setPassword(String password) {
-        this.password = password;
-    }
+        /**
+         * @return the password
+         */
+        public String getPassword() {
+                return password;
+        }
 
-    /**
-     * @return the isAdmin
-     */
-    public boolean isIsAdmin() {
-        return isAdmin;
-    }
+        /**
+         * @param password the password to set
+         */
+        public void setPassword(String password) {
+                this.password = password;
+        }
 
-    /**
-     * @param isAdmin the isAdmin to set
-     */
-    public void setIsAdmin(boolean isAdmin) {
-        this.isAdmin = isAdmin;
-    }
+        /**
+         * @return the name
+         */
+        public String getName() {
+                return name;
+        }
 
-    /**
-     * @return the avatarURL
-     */
-    public String getAvatarURL() {
-        return avatarURL;
-    }
+        /**
+         * @param name the name to set
+         */
+        public void setName(String name) {
+                this.name = name;
+        }
 
-    /**
-     * @param avatarURL the avatarURL to set
-     */
-    public void setAvatarURL(String avatarURL) {
-        this.avatarURL = avatarURL;
-    }
+        /**
+         * @return the isAdmin
+         */
+        public boolean isIsAdmin() {
+                return isAdmin;
+        }
 
-    @Override
-    public String toString() {
-        return "AccountDTO{" + "userName=" + getUserName() + ", email=" + getEmail() + ", password=" + getPassword() + ", isAdmin=" + isIsAdmin() + ", avatarURL=" + getAvatarURL() + '}';
-    }
+        /**
+         * @param isAdmin the isAdmin to set
+         */
+        public void setIsAdmin(boolean isAdmin) {
+                this.isAdmin = isAdmin;
+        }
 
+        /**
+         * @return the avatarURL
+         */
+        public String getAvatarURL() {
+                return avatarURL;
+        }
+
+        /**
+         * @param avatarURL the avatarURL to set
+         */
+        public void setAvatarURL(String avatarURL) {
+                this.avatarURL = avatarURL;
+        }
+
+        @Override
+        public String toString() {
+                return "AccountDTO{" + "userName=" + userName + ", email=" + email + ", password=" + password + ", name=" + name + ", isAdmin=" + isAdmin + ", avatarURL=" + avatarURL + '}';
+        }
+ 
 }

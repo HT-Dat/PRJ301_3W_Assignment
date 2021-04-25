@@ -5,78 +5,89 @@
  */
 package novel;
 
+import account.AccountDTO;
+
 /**
  *
  * @author Gray
  */
 public class NovelDTO {
+        private String novelID;
+        private String novelName;
+        private AccountDTO author;
+        private String coverURL;
 
-    private String novelID;
-    private String name;
-    private String author;
-    private String coverURL;
+        public NovelDTO() {
+        }
 
-    public NovelDTO(String novelID, String name, String author, String coverURL) {
-        this.novelID = novelID;
-        this.name = name;
-        this.author = author;
-        this.coverURL = coverURL;
-    }
+        public NovelDTO(String novelID, String novelName, AccountDTO author, String coverURL) {
+                this.novelID = novelID;
+                this.novelName = novelName;
+                this.author = author;
+                this.coverURL = coverURL;
+        }
+        
+        
 
-    /**
-     * @return the novelID
-     */
-    public String getNovelID() {
-        return novelID;
-    }
+        @Override
+        public String toString() {
+                return "NovelDTO{" + "novelID=" + getNovelID() + ", novelName=" + getNovelName() + ", author=" + getAuthor() + ", coverURL=" + getCoverURL() + '}';
+        }
 
-    /**
-     * @param novelID the novelID to set
-     */
-    public void setNovelID(String novelID) {
-        this.novelID = novelID;
-    }
+        /**
+         * @return the novelID
+         */
+        public String getNovelID() {
+                return novelID;
+        }
 
-    /**
-     * @return the name
-     */
-    public String getName() {
-        return name;
-    }
+        /**
+         * @param novelID the novelID to set
+         */
+        public void setNovelID(String novelID) {
+                this.novelID = novelID;
+        }
 
-    /**
-     * @param name the name to set
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
+        /**
+         * @return the novelName
+         */
+        public String getNovelName() {
+                return novelName;
+        }
 
-    /**
-     * @return the author
-     */
-    public String getAuthor() {
-        return author;
-    }
+        /**
+         * @param novelName the novelName to set
+         */
+        public void setNovelName(String novelName) {
+                this.novelName = novelName;
+        }
 
-    /**
-     * @param author the author to set
-     */
-    public void setAuthor(String author) {
-        this.author = author;
-    }
+        /**
+         * @return the author
+         */
+        public AccountDTO getAuthor() {
+                return author;
+        }
 
-    /**
-     * @return the coverURL
-     */
-    public String getCoverURL() {
-        return coverURL;
-    }
+        /**
+         * @param author the author to set
+         */
+        public void setAuthor(AccountDTO author) {
+                this.author = author;
+        }
 
-    /**
-     * @param coverURL the coverURL to set
-     */
-    public void setCoverURL(String coverURL) {
-        this.coverURL = coverURL;
-    }
+        /**
+         * @return the coverURL
+         */
+        public String getCoverURL() {
+                return coverURL;
+        }
 
+        /**
+         * @param coverURL the coverURL to set
+         */
+        public void setCoverURL(String coverURL) {
+                this.coverURL = coverURL;
+        }
+        
 }
