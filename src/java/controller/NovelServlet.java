@@ -10,6 +10,7 @@ import bookmark.BookmarkDAO;
 import chapter.ChapterDAO;
 import chapter.ChapterDTO;
 import comment.CommentDAO;
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
@@ -27,6 +28,7 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 import novel.NovelDAO;
 import novel.NovelDTO;
+import org.apache.tomcat.util.http.fileupload.FileUtils;
 import tag.TagDAO;
 import tag.TagDTO;
 
@@ -111,8 +113,10 @@ public class NovelServlet extends HttpServlet {
                         //In case novel is in other languages than English, name are translated to an array of bytes with 
                         //charsets "ISO_8859_1" rather than "UTF-8"
                         keyword = new String(keyword.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
+                        //find every novel which contains the keyword
                         ArrayList<NovelDTO> nList = (ArrayList<NovelDTO>) nDAO.searchByName(keyword);
                         if(nList.size() > 0) {
+                                //set information to request and redirect to homepage   
                                 request.setAttribute("novelList", nList);
                                 request.setAttribute("size", nList.size());
                                 request.setAttribute("keyword", keyword);
@@ -120,6 +124,30 @@ public class NovelServlet extends HttpServlet {
                                 request.setAttribute("NoNovelNameError", "Sorry, we don't find any novel with keyword" + keyword);
                         }
                         request.getRequestDispatcher("Homepage.jsp").forward(request, response);
+                } else if (session.getAttribute("user") != null) { //Actions only available if you logged in 
+                        if(action.equals("DeleteNovel")) {
+                                //first, delete the novel from database
+                                String nid = request.getParameter("nid");
+                                NovelDTO n = nDAO.get(nid);
+                                request.setAttribute("del_done", "Novel" + n.getNovelName() + "has been successfully deleted!");
+                                if (n == null) {
+                                        request.setAttribute("NOVELNOTFOUND", "Could not find this novel");
+                                        request.getRequestDispatcher("error.jsp").forward(request, response);
+                                } else {
+                                        //if novel has any cover other than the default one, delete it
+                                        if(!n.getCoverURL().equals("defaultCover.png")) {
+                                                deleteCover(nid);
+                                        }
+                                        //then delete the novel from database
+                                        nDAO.delete(nid);
+                                        //finally delete the novel's files
+                                        deleteFile(nid);
+                                        ArrayList<NovelDTO> novelList = (ArrayList<NovelDTO>) nDAO.getAll();
+                                        request.setAttribute("novelList", novelList);
+                                        request.getRequestDispatcher("Homepage.jsp").forward(request, response);
+                                }
+                        }
+                        
                 }
         }
         
@@ -131,7 +159,30 @@ public class NovelServlet extends HttpServlet {
                 }
                 return null;
         }
-
+        
+        public void deleteCover(String novelID) {
+                //get location of the cover image
+                String filepath = getServletContext().getRealPath("") + "/images/covers/" + novelID + ".jpg";
+                File file = new File(filepath);
+                //delete if exist, ignore if empty
+                if (!file.exists()) {
+                        return;
+                } else {
+                        file.delete();
+                }
+        }
+        
+        public void deleteFile(String novelID) throws IOException {
+                String filepath = getServletContext().getRealPath("") + "/novels/" + novelID;
+                File directory = new File(filepath);
+                if (!directory.exists()) {
+                        return;
+                } else {
+                        FileUtils.cleanDirectory(directory);
+                        directory.delete();
+                }
+        }
+        
         // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
         /**
          * Handles the HTTP <code>GET</code> method.

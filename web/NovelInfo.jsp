@@ -103,7 +103,7 @@
                                                 <div class="chapter-item">
                                                         <a class="chapName" href="NovelServlet?action=read&nid=${chapter.novel.novelID}&cid=${chapter.chapterID}">${chapter.chapterName}</a>
                                                         <%--Author and admin can delete chapters --%>
-                                                        <c:if test="${sessionScope.user.username.equals(novel.author.username) || sessionScope.user.isAdmin==true}">
+                                                        <c:if test="${sessionScope.user.username.equals(novel.author.userName) || sessionScope.user.isAdmin==true}">
                                                                 <a class="action" href="ChapterServlet?action=del&cid=${chapter.chapterID}&nid=${chapter.novel.novelID}" onclick="return confirm('Are you sure you want to delete?')">Delete</a>
                                                         </c:if>
                                                 </div>

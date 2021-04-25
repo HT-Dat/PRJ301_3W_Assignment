@@ -44,7 +44,6 @@ public class NovelDAO {
                 stm = con.prepareStatement(sql);
                 rs = stm.executeQuery();
                 while (rs.next()) {
-                    System.out.println("ohoho");
                     String novelID = rs.getString("novelID");
                     String name = rs.getString("name");
                     String AuthorName = rs.getString("author");
@@ -66,7 +65,6 @@ public class NovelDAO {
                 con.close();
             }
         }
-        System.out.println("ahihi" + list);
         return list;
     }
 
