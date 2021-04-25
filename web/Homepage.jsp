@@ -71,8 +71,6 @@
                                 <h1 style="color:red; font-size: 150%; text-align: center">Your Novels</h1>
                         </c:if>
                         <c:if test="${not empty novelList}">
-                            <% 
-                                System.out.println(request.getAttribute("novelList")); %>
                                 <ul class="n-list">
                                         <c:forEach items="${novelList}" var="novel">
                                                 <li class="n-listitem">
