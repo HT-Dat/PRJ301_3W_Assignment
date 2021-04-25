@@ -9,7 +9,6 @@ import bookmark.BookmarkDAO;
 import chapter.ChapterDAO;
 import comment.CommentDAO;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -66,6 +65,7 @@ public class NovelServlet extends HttpServlet {
                //action = null -> display homepage.jsp
                if(action == null) {
                        ArrayList<NovelDTO> novelList = (ArrayList<NovelDTO>) nDAO.getAll();
+                       System.out.println(novelList);
                         request.setAttribute("novelList", novelList);
                         request.getRequestDispatcher("Homepage.jsp").forward(request, response);
                }

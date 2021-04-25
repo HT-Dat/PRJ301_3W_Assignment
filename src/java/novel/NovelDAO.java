@@ -46,10 +46,11 @@ public class NovelDAO {
                                 while (rs.next()) {
                                         String novelID = rs.getString("novelID");
                                         String name = rs.getString("name");
+                                        String AuthorName = rs.getString("author");
                                         AccountDAO accDAO = new AccountDAO();
-                                        AccountDTO author = accDAO.getAccountByUsername(name);
+                                        AccountDTO author = accDAO.getAccountByUsername(AuthorName);
                                         String coverURL = rs.getString("coverURL");
-                                        NovelDTO dto = new NovelDTO(novelID, novelID, author, coverURL);
+                                        NovelDTO dto = new NovelDTO(novelID, name, author, coverURL);
                                         list.add(dto);
                                 }
                         }
