@@ -3,45 +3,16 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" type="text/css" href="styles/login.css"> 
         <title>Login </title>
     </head>
-<<<<<<< HEAD
-
     <body>
         <form action="LoginServlet?action=login" method="POST">
-
-            <table style="with: 50%">
-
-                <tr>
-                    <td>UserName</td>
-                    <td><input type="text" name="username" /></td>
-                </tr>
-                <tr>
-                    <td>Password</td>
-                    <td><input type="password" name="Password" /></td>
-                </tr>
-            </table>
+            UserName
+            <input type="text" name="username" />
+            Password
+            <input type="password" name="password" />
             <input type="submit" name="login"  />
         </form>
     </body>
-=======
-    
-<body>
-<form action="LoginServlet?action=login" method="POST">
-  
-		<table style="with: 50%">
- 
-			<tr>
-				<td>UserName</td>
-				<td><input type="text" name="username" /></td>
-			</tr>
-				<tr>
-				<td>Password</td>
-				<td><input type="password" name="password" /></td>
-			</tr>
-		</table>
-       <input type="submit" name="login"  />
-</form>
-</body>
->>>>>>> 10a8953a82a13881ac3d9ba2a20db0b8f0f6e839
 </html>
