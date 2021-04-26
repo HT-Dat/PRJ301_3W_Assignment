@@ -10,15 +10,20 @@ import bookmark.BookmarkDAO;
 import chapter.ChapterDAO;
 import chapter.ChapterDTO;
 import comment.CommentDAO;
+import comment.CommentDTO;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -211,9 +216,35 @@ public class NovelServlet extends HttpServlet {
                                 String filepath = getServletContext().getRealPath("") + "/Novels/" + nid + "/" + cid + ".txt";
                                 ArrayList<String> linesFromFile = new ArrayList<>();
                                 linesFromFile = (ArrayList<String>) readFile(filepath);
-                                NovelDTO readNovel = nDAO.get(nid);
-                                LinkedList<Chapter> cList = cDAO.getChapters(nid);
-                                int index = cDAO.sea
+                                NovelDTO currentNovel = nDAO.get(nid);
+                                //get all chapters of a novel based on novel id
+                                LinkedList<ChapterDTO> cList = cDAO.getChapters(nid);
+                                int index = cDAO.searchChapterInList(cList, nid, cid);
+                                ChapterDTO currentChap = cList.get(index);
+                                //get previous chapter
+                                ChapterDTO prvChapter = null;
+                                ChapterDTO nextChapter = null;
+                                //if current chapter is not first chapter
+                                if(index - 1 >= 0) {
+                                        prvChapter = cList.get(index-1);
+                                }
+                                //if current chapter is not last chapter
+                                if(index + 1 <cList.size()) {
+                                        nextChapter = cList.get(index+1);
+                                }
+                                if(prvChapter != null) {
+                                        request.setAttribute("prvChaper", prvChapter);
+                                }
+                                if(nextChapter != null) {
+                                        request.setAttribute("nextChapter", nextChapter);
+                                }
+                                //get all comments of current chapter
+                                LinkedList<CommentDTO> cmtList = cmDAO.searchCmtByChapter(nid, cid);
+                                request.setAttribute("cmtList", cmtList);
+                                request.setAttribute("currentNovel", currentNovel);
+                                request.setAttribute("currentChapter", currentChap);
+                                request.setAttribute("chapData", linesFromFile);
+                                request.getRequestDispatcher("ReadChapter.jsp").forward(request, response);
                         }
                 }
         }
@@ -251,7 +282,7 @@ public class NovelServlet extends HttpServlet {
         }
         
         public void createFolder(String novelID) {
-                String path = getServletContext().getRealPath("") + "/novels/" + novelID;
+                String path = getServletContext().getRealPath("") + "novels\\" + novelID;
                 File folder = new File(path);
                 if (!folder.exists()) {
                         folder.mkdir();
@@ -292,6 +323,21 @@ public class NovelServlet extends HttpServlet {
                 }
                 System.out.println(fileName);
                 return fileName;
+        }
+        
+        public List<String> readFile(String filepath) {
+                Path path = Paths.get(filepath);
+                List<String> linesList = new ArrayList<>();
+                try {
+                        linesList = Files.readAllLines(path, StandardCharsets.UTF_8);
+                        for (String string : linesList) {
+                                System.out.println(string);
+                        }
+                        return linesList;
+                } catch (Exception e) {
+                        e.printStackTrace();
+                }
+                return null;
         }
 
 // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
