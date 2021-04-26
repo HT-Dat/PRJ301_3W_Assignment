@@ -51,6 +51,33 @@ public class ChapterDAO {
         return false;
     }
 
+    public boolean delete(ChapterDTO chap) throws SQLException {
+        Connection con = null;
+        PreparedStatement ps = null;
+        String sql = "DELETE FROM Comment WHERE chapterID=? AND novelID=?\n"
+                + "DELETE FROM Chapter WHERE chapterID=? AND novelID=?";
+        try {
+            con = ConnectDB.makeConnection();
+            if (con != null) {
+                ps = con.prepareStatement(sql);
+                ps.setString(1, chap.getChapterID());
+                ps.setString(2, chap.getNovel().getNovelID());
+                ps.setString(3, chap.getChapterID());
+                ps.setString(4, chap.getNovel().getNovelID());
+                ps.executeUpdate();
+                return true;
+            }
+        } finally {
+            if (ps != null) {
+                ps.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+        return false;
+    }
+
     public LinkedList<ChapterDTO> getChapters(String novelID) {
         Connection con = null;
         PreparedStatement ps = null;
@@ -122,5 +149,33 @@ public class ChapterDAO {
             }
         }
         return null;
+    }
+
+    public boolean add(ChapterDTO chap) throws SQLException {
+        Connection con = null;
+        PreparedStatement ps = null;
+        String sql = "insert into Chapter(chapterID, novelID, chapterName, fileURL, uploadDate)"
+                + "values(?, ?, ?, ?, ?)";
+        try {
+            con = ConnectDB.makeConnection();
+            if (con != null) {
+                ps = con.prepareStatement(sql);
+                ps.setString(1, chap.getChapterID());
+                ps.setString(2, chap.getNovel().getNovelID());
+                ps.setString(3, chap.getChapterName());
+                ps.setString(4, chap.getFileURL());
+                ps.setDate(5, chap.getUploadDate());
+                ps.executeUpdate();
+                return true;
+            }
+        } finally {
+            if (ps != null) {
+                ps.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+        return false;
     }
 }
