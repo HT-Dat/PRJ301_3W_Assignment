@@ -205,8 +205,15 @@ public class NovelServlet extends HttpServlet {
                                         request.setAttribute("NoNovelNameError", "Sorry, you have yet any novel in our database");
                                 }
                                 request.getRequestDispatcher("Homepage.jsp").forward(request, response);
-                        } else if (action.equals("UpdateNovelForm")) {
-
+                        } else if (action.equals("read")) {
+                                String nid = request.getParameter("nid");
+                                String cid = request.getParameter("cid");
+                                String filepath = getServletContext().getRealPath("") + "/Novels/" + nid + "/" + cid + ".txt";
+                                ArrayList<String> linesFromFile = new ArrayList<>();
+                                linesFromFile = (ArrayList<String>) readFile(filepath);
+                                NovelDTO readNovel = nDAO.get(nid);
+                                LinkedList<Chapter> cList = cDAO.getChapters(nid);
+                                int index = cDAO.sea
                         }
                 }
         }
