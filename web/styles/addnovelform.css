@@ -1,0 +1,99 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Apr 26, 2021, 6:57:40 PM
+    Author     : Gray
+*/
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body{
+    background-color: antiquewhite;
+}
+
+legend {
+    margin-left: 10%;
+}
+
+fieldset {
+    width: 50%;
+    padding: 2% 4%;
+}
+
+#form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+label{
+    line-height: 2rem;
+}
+
+#novelName {
+    width: 100%;
+    padding: 12px 20px;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 7px;
+    box-sizing: border-box;
+    outline-color: #4CAF50;
+}
+
+.tagTable{
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+}
+
+.tag-item {
+    font-family: whitney;
+    border: 1px solid black;
+    border-radius: 25px;
+    display: flex;
+    padding: 0;
+    margin: 10px 10px 0px 0px;
+    background: white;
+}
+
+.selected {
+    background-color: orange;
+    border: 0.5px solid black;
+}
+
+.tagname {
+    font-size: 15px;
+    margin-left: 0.7rem;
+}
+
+#add{
+    background-color: #6cff77;
+    cursor: pointer;
+    padding: 10px 14px;
+    margin-right: 5%;
+    border-radius: 15px;
+}
+
+#add:hover{
+    background-color: #00b215;
+}
+
+#cancel:hover{
+    background-color: #c70000;
+}
+
+#cancel{
+    background-color: #ff6868;
+    cursor: pointer;
+    padding: 10px 14px;
+    margin-right: 5%;
+    border-radius: 15px;
+}

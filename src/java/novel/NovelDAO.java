@@ -103,7 +103,7 @@ public class NovelDAO {
                 }
                 return false;
         }
-        
+
         //for delete button on homepage
         public boolean delete(String novelID) throws SQLException {
                 BookmarkDAO bookmarkDAO = new BookmarkDAO();
@@ -147,7 +147,7 @@ public class NovelDAO {
                 }
                 return false;
         }
-        
+
         //get all novels written by an user. for "Your Novel" button
         public ArrayList<NovelDTO> getUserNovels(String username) {
                 Connection con = null;
@@ -399,5 +399,36 @@ public class NovelDAO {
                         }
                 }
                 return dto;
+        }
+
+        public boolean addTagMap(String novelID, String tagID) {
+                Connection con = null;
+                PreparedStatement ps = null;
+                String sql = "INSERT INTO TagMap(novelID, tagID)"
+                        + "VALUES(?, ?)";
+                try {
+                        con = ConnectDB.makeConnection();
+                        if (con != null) {
+                                ps = con.prepareStatement(sql);
+                                ps.setString(1, novelID);
+                                ps.setString(2, tagID);
+                                ps.executeUpdate();
+                                return true;
+                        }
+                } catch (SQLException e) {
+                        System.out.println(e.getMessage());
+                } finally {
+                        try {
+                                if (ps != null) {
+                                        ps.close();
+                                }
+                                if (con != null) {
+                                        con.close();
+                                }
+                        } catch (SQLException e) {
+                                System.out.println(e.getMessage());
+                        }
+                }
+                return false;
         }
 }
