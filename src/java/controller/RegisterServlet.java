@@ -14,6 +14,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.sql.SQLException;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -26,6 +27,11 @@ import javax.servlet.http.Part;
  * @author hotie
  */
 @WebServlet(name = "RegisterServlet", urlPatterns = {"/RegisterServlet"})
+@MultipartConfig(
+        fileSizeThreshold = 10 * 1024 * 1024,
+        maxFileSize = 1024 * 1024 * 50,
+        maxRequestSize = 1024 * 1024 * 100
+)
 public class RegisterServlet extends HttpServlet {
 
     /**
@@ -39,8 +45,9 @@ public class RegisterServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
         String action = request.getParameter("action");
-
+        System.out.println(action);
         //if a==null -> redirect to register_form.html
         try {
             if (action == null) {
@@ -57,8 +64,7 @@ public class RegisterServlet extends HttpServlet {
                 AccountDAO dao = new AccountDAO();
                 AccountDTO foundAccount = dao.getAccountByUsername(username);
                 AccountDTO foundAccountByEmail = dao.getByEmail(email);
-                System.out.println(foundAccount);
-                System.out.println(foundAccountByEmail);
+
                 //if foundAccount!= null -> dispatch to register_form, keep all inputted values except password
                 if (foundAccount != null) {
                     request.setAttribute("username", username);
