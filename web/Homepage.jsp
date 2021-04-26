@@ -78,7 +78,7 @@
                                         <c:forEach items="${novelList}" var="novel">
                                                 <li class="n-listitem">
                                                         <a href="NovelServlet?action=NovelInfo&nid=${novel.novelID}"><img class="cover" src="${pageContext.request.contextPath}/images/covers/${novel.coverURL}"/></a>
-                                                        <a class="n-title" href="NovelServlet?action=NovelInfo&n=${novel.novelID}">${novel.novelName}</a>
+                                                        <a class="n-title" href="NovelServlet?action=NovelInfo&nid=${novel.novelID}">${novel.novelName}</a>
                                                         <p>${novel.author.getUserName()}</p>
                                                         <c:if test="${user.userName.equals(novel.author.userName)}">
                                                                 <a style="color: red" href="ChapterServlet?action=AddChapterForm&nid=${novel.novelID}">Add new chapter</a>
