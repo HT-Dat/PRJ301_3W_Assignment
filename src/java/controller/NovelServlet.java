@@ -148,7 +148,6 @@ public class NovelServlet extends HttpServlet {
                 }
             }
         }
-        request.getRequestDispatcher("Homepage.jsp").forward(request, response);
     }
 
     private String getFileName(Part part) {
