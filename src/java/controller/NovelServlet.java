@@ -44,7 +44,6 @@ import tag.TagDTO;
 )
 public class NovelServlet extends HttpServlet {
 
-<<<<<<< HEAD
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -103,111 +102,6 @@ public class NovelServlet extends HttpServlet {
                     request.setAttribute("tag", tDAO.getTag(tid));
                 } else {
                     request.setAttribute("NoNovelError", "No novels could be found");
-=======
-        /**
-         * Processes requests for both HTTP <code>GET</code> and
-         * <code>POST</code> methods.
-         *
-         * @param request servlet request
-         * @param response servlet response
-         * @throws ServletException if a servlet-specific error occurs
-         * @throws IOException if an I/O error occurs
-         */
-        protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-                throws ServletException, IOException, SQLException, ClassNotFoundException {
-                response.setContentType("text/html;charset=UTF-8");
-                String info = "NovelInfo.jsp";
-                String action = request.getParameter("action");
-                NovelDAO nDAO = new NovelDAO();
-                TagDAO tDAO = new TagDAO();
-                ChapterDAO cDAO = new ChapterDAO();
-                CommentDAO cmDAO = new CommentDAO();
-                BookmarkDAO bDAO = new BookmarkDAO();
-                ArrayList<TagDTO> tagList = tDAO.getAllTags();
-                getServletContext().setAttribute("tagList", tagList);
-                
-                HttpSession session = request.getSession(false);
-                //action = null -> display homepage.jsp
-                if (action == null) {
-                        ArrayList<NovelDTO> novelList = (ArrayList<NovelDTO>) nDAO.getAll();
-                        request.setAttribute("novelList", novelList);
-                        request.getRequestDispatcher("Homepage.jsp").forward(request, response);
-                } else if (action.equals("NovelInfo")) {
-                        String nid = request.getParameter("nid");
-                        ArrayList<TagDTO> tList = tDAO.getTagList(nid);
-                        //get novel by id
-                        NovelDTO ndto = nDAO.get(nid);
-                        //check if reader login or not to show bookmark
-                        AccountDTO user = (AccountDTO) session.getAttribute("user");
-                        LinkedList<ChapterDTO> chapterList = cDAO.getChapters(nid);
-                        //if reader logged in, check if they bookmark this novel or not
-                        if (user != null) {
-                                boolean isBookmarked = bDAO.isBookmarked(user.getUserName(), nid);
-                                request.setAttribute("bookmark", isBookmarked);
-                        }
-                        request.setAttribute("taglist", tList);
-                        request.setAttribute("chapterList", chapterList);
-                        request.setAttribute("novel", ndto);
-                        request.getRequestDispatcher("NovelInfo.jsp").forward(request, response);
-                } else if (action.equals("SearchByTag")) {
-                        //get tagID to search for tag
-                        String tid = request.getParameter("tid");
-                        TagDTO tag = tDAO.getTag(tid);
-                        //if tag is found, find all novel with this tag
-                        if(tag != null) {
-                                ArrayList<NovelDTO> novelWithTag = (ArrayList<NovelDTO>) nDAO.searchByTag(tid);
-                                if(novelWithTag.size() > 0) {
-                                        request.setAttribute("size", novelWithTag.size());
-                                        request.setAttribute("novelList", novelWithTag);
-                                        request.setAttribute("tag", tDAO.getTag(tid));
-                                } else {
-                                        request.setAttribute("NoNovelError", "No novels could be found");
-                                }
-                                request.getRequestDispatcher("Homepage.jsp").forward(request, response);
-                        } else {
-                                request.setAttribute("TAGNOTFOUNDERROR", "Tag not found");
-                                request.getRequestDispatcher("Error.jsp").forward(request, response);
-                        }
-                } else if (action.equals("SearchByName")) {
-                        String keyword = request.getParameter("keyword");
-                        //In case novel is in other languages than English, name are translated to an array of bytes with 
-                        //charsets "ISO_8859_1" rather than "UTF-8"
-                        keyword = new String(keyword.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
-                        //find every novel which contains the keyword
-                        ArrayList<NovelDTO> nList = (ArrayList<NovelDTO>) nDAO.searchByName(keyword);
-                        if(nList.size() > 0) {
-                                //set information to request and redirect to homepage   
-                                request.setAttribute("novelList", nList);
-                                request.setAttribute("size", nList.size());
-                                request.setAttribute("keyword", keyword);
-                        } else {
-                                request.setAttribute("NoNovelNameError", "Sorry, we don't find any novel with keyword" + keyword);
-                        }
-                        request.getRequestDispatcher("Homepage.jsp").forward(request, response);
-                } else if (session.getAttribute("user") != null) { //Actions only available if you logged in 
-                        if(action.equals("DeleteNovel")) {
-                                //first, delete the novel from database
-                                String nid = request.getParameter("nid");
-                                NovelDTO n = nDAO.get(nid);
-                                if (n == null) {
-                                        request.setAttribute("NOVELNOTFOUND", "Could not find this novel");
-                                        request.getRequestDispatcher("error.jsp").forward(request, response);
-                                } else {
-                                        //if novel has any cover other than the default one, delete it
-                                        if(!n.getCoverURL().equals("defaultCover.png")) {
-                                                deleteCover(nid);
-                                        }
-                                        //then delete the novel from database
-                                        nDAO.delete(nid);
-                                        //finally delete the novel's files
-                                        deleteFile(nid);
-                                        ArrayList<NovelDTO> novelList = (ArrayList<NovelDTO>) nDAO.getAll();
-                                        request.setAttribute("novelList", novelList);
-                                        request.getRequestDispatcher("Homepage.jsp").forward(request, response);
-                                }
-                        }
-                        
->>>>>>> 6ccc3e76aeaab07a7a5de446ee3dc7278c692c4c
                 }
                 request.getRequestDispatcher("Homepage.jsp").forward(request, response);
             } else {
@@ -235,13 +129,11 @@ public class NovelServlet extends HttpServlet {
                 //first, delete the novel from database
                 String nid = request.getParameter("nid");
                 NovelDTO n = nDAO.get(nid);
-                if (n != null) {
-                    request.setAttribute("del_done", "Novel" + n.getNovelName() + "has been successfully deleted!");
-                }
                 if (n == null) {
                     request.setAttribute("NOVELNOTFOUND", "Could not find this novel");
                     request.getRequestDispatcher("error.jsp").forward(request, response);
                 } else {
+                    request.setAttribute("del_done", "Novel" + n.getNovelName() + "has been successfully deleted!");
                     //if novel has any cover other than the default one, delete it
                     if (!n.getCoverURL().equals("defaultCover.png")) {
                         deleteCover(nid);
@@ -255,8 +147,8 @@ public class NovelServlet extends HttpServlet {
                     request.getRequestDispatcher("Homepage.jsp").forward(request, response);
                 }
             }
-
         }
+        request.getRequestDispatcher("Homepage.jsp").forward(request, response);
     }
 
     private String getFileName(Part part) {
