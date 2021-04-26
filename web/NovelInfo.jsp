@@ -23,10 +23,9 @@
                                         <c:set var="begin" value="0"/>
                                         <c:set var="end" value="5"/>
                                 <ul class="dropdown-content">
-                                        <c:out value="${tagList}" />
                                         <c:forEach begin="0" end="4">
                                                 <div class=column>
-                                                        <c:forEach items="${applicationScope.tagListObj}" var="tag" begin="${begin}" end="${end}">
+                                                        <c:forEach items="${applicationScope.tagList}" var="tag" begin="${begin}" end="${end}">
                                                                 <li><a class="tag" href="NovelServlet?a=searchtag&id=${tag.tagID}"><c:out value="${tag.getTagName()}"/></a></li>
                                                                 </c:forEach>
                                                 </div>
@@ -103,7 +102,7 @@
                                                 <div class="chapter-item">
                                                         <a class="chapName" href="NovelServlet?action=read&nid=${chapter.novel.novelID}&cid=${chapter.chapterID}">${chapter.chapterName}</a>
                                                         <%--Author and admin can delete chapters --%>
-                                                        <c:if test="${sessionScope.user.username.equals(novel.author.userName) || sessionScope.user.isAdmin==true}">
+                                                        <c:if test="${sessionScope.user.isAdmin==true || user.userName.equals(chapter.novel.author.userName)}">
                                                                 <a class="action" href="ChapterServlet?action=del&cid=${chapter.chapterID}&nid=${chapter.novel.novelID}" onclick="return confirm('Are you sure you want to delete?')">Delete</a>
                                                         </c:if>
                                                 </div>
