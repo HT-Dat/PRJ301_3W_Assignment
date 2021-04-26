@@ -240,7 +240,7 @@ public class NovelDAO {
                         con = ConnectDB.makeConnection();
                         if (con != null) {
                                 //2. Create SQL String
-                                String sql = "INSERT INTO Products "
+                                String sql = "INSERT INTO Novel "
                                         + "VALUES(?, ?, ?, ?)";
                                 //3. Create statement and assign value to parameter
                                 stm = con.prepareStatement(sql);
@@ -374,10 +374,12 @@ public class NovelDAO {
                                 String sql = "SELECT * "
                                         + "FROM Novel "
                                         + "WHERE name = ? AND author = ?";
-                                stm.setString(1, name);
-                                stm.setString(2, username);
+                                System.out.println(name);
+                                System.out.println(username);
                                 //3. Create statement and assign values 
                                 stm = con.prepareStatement(sql);
+                                stm.setString(1, name);
+                                stm.setString(2, username);
                                 rs = stm.executeQuery();
                                 if (rs.next()) {
                                         AccountDAO aDAO = new AccountDAO();

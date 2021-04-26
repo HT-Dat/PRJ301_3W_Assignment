@@ -255,7 +255,7 @@ public class NovelServlet extends HttpServlet {
                 String fileName = "";
                 try {
                         Part filePart = request.getPart("coverURL");
-                        fileName = novelID + ".jpg";
+                        fileName = novelID;
                         String applicationPath = request.getServletContext().getRealPath("");
                         String basePath = applicationPath + File.separator + "images" + File.separator + "covers" + File.separator;
                         InputStream inputStream = null;
@@ -283,6 +283,7 @@ public class NovelServlet extends HttpServlet {
                 } catch (IOException | ServletException e) {
                         fileName = "";
                 }
+                System.out.println(fileName);
                 return fileName;
         }
 
