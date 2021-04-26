@@ -53,7 +53,7 @@ public class CommentDAO {
         return false;
     }
 
-    public boolean add(String username, String context, String chapterID, String novelID) {
+    public boolean add(String username, String context, String chapterID, String novelID) throws SQLException {
         Connection con = null;
         PreparedStatement ps = null;
         LinkedList<CommentDTO> lst = this.getAll();
@@ -78,12 +78,9 @@ public class CommentDAO {
                 ps.setString(4, username);
                 ps.setString(5, context);
                 ps.setString(6, commentDate);
-
                 ps.executeUpdate();
                 return true;
             }
-        } catch (NumberFormatException | SQLException e) {
-            e.printStackTrace();
         } finally {
             try {
                 if (ps != null) {
@@ -100,7 +97,7 @@ public class CommentDAO {
         return false;
     }
 
-    public LinkedList<CommentDTO> getAll() {
+    public LinkedList<CommentDTO> getAll() throws SQLException {
         LinkedList<CommentDTO> lst = new LinkedList<>();
         Connection con = null;
         PreparedStatement ps = null;
@@ -125,8 +122,6 @@ public class CommentDAO {
                     lst.add(com);
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         } finally {
             try {
                 if (rs != null) {
