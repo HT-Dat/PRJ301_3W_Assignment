@@ -68,6 +68,9 @@
                         <c:if test="${keyword != null}">
                                 <h1 style="margin-left: 2%;">We found ${size} novel(s) with keyword(s): ${keyword}</h1>
                         </c:if>
+                        <c:if test="${del_done != null}">
+                                <a href="#" onload="confirm(${del_done})></a>
+                        </c:if>
                         <c:if test="${BookmarkFlag != null}">
                                 <h1 style="color:red; font-size: 150%; text-align: center">${BookmarkFlag}</h1>
                         </c:if>
@@ -123,9 +126,9 @@
                         </c:when>
                         <c:otherwise>
                                 <div class="side-box">
-                                        <a href="LoginServlet?action=invalid">Add a novel</a><br>
-                                        <a href="LoginServlet?action=invalid">Your novels</a><br>
-                                        <a href="LoginServlet?action=invalid">Bookmark</a><br>
+                                        <a href="LoginServlet">Add a novel</a><br>
+                                        <a href="LoginServlet">Your novels</a><br>
+                                        <a href="LoginServlet">Bookmark</a><br>
                                 </div>
                         </c:otherwise> 
                 </c:choose>
