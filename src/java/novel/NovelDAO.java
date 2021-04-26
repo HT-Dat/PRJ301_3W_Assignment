@@ -192,7 +192,7 @@ public class NovelDAO {
                 return nList;
         }
 
-        public NovelDTO get(String novelID) throws SQLException, ClassNotFoundException {
+        public NovelDTO get(String novelID) throws SQLException {
                 Connection con = null;
                 PreparedStatement stm = null;
                 ResultSet rs = null;

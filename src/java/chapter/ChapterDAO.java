@@ -20,65 +20,107 @@ import utils.ConnectDB;
  */
 public class ChapterDAO {
 
-        public boolean delete(String novelID) throws SQLException {
-                Connection con = null;
-                PreparedStatement stm = null;
-                try {
-                        //1. Connect DB
-                        con = ConnectDB.makeConnection();
-                        if (con != null) {
-                                //2. Create SQL String
-                                String sql = "DELETE FROM Chapter "
-                                        + "WHERE novelID = ?";
-                                //3. Create statement and assign value to parameter
-                                stm = con.prepareStatement(sql);
-                                stm.setString(1, novelID);
-                                //4. Execute query
-                                int row = stm.executeUpdate();
-                                //5. Process result
-                                if (row > 0) {
-                                        return true;
-                                }
-                        }
-                } finally {
-                        if (stm != null) {
-                                stm.close();
-                        }
-                        if (con != null) {
-                                con.close();
-                        }
+    public boolean delete(String novelID) throws SQLException {
+        Connection con = null;
+        PreparedStatement stm = null;
+        try {
+            //1. Connect DB
+            con = ConnectDB.makeConnection();
+            if (con != null) {
+                //2. Create SQL String
+                String sql = "DELETE FROM Chapter "
+                        + "WHERE novelID = ?";
+                //3. Create statement and assign value to parameter
+                stm = con.prepareStatement(sql);
+                stm.setString(1, novelID);
+                //4. Execute query
+                int row = stm.executeUpdate();
+                //5. Process result
+                if (row > 0) {
+                    return true;
                 }
-                return false;
+            }
+        } finally {
+            if (stm != null) {
+                stm.close();
+            }
+            if (con != null) {
+                con.close();
+            }
         }
+        return false;
+    }
 
-        public LinkedList<ChapterDTO> getChapters(String novelID) {
-                Connection con = null;
-                PreparedStatement ps = null;
-                ResultSet rs = null;
-                LinkedList<ChapterDTO> lst = new LinkedList<>();
-                NovelDAO nDAO = new NovelDAO();
-                //get all chapter belong to a specific novel and order them by date
-                String sql = "SELECT * FROM Chapter WHERE novelID=? ORDER BY CONVERT(DATE, uploadDate) ASC";
-                try {
-                        con = ConnectDB.makeConnection();
-                        if (con != null) {
-                                ps = con.prepareStatement(sql);
-                                ps.setString(1, novelID);
-                                rs = ps.executeQuery();
-                                while (rs.next()) {
-                                        String chapterID = rs.getString("chapterID");
-                                        String chapterName = rs.getString("chapterName");
-                                        String chapterURL = rs.getString("fileURL");
-                                        String nid = rs.getString("novelID");
-                                        Date uploadDate = rs.getDate("uploadDate");
-                                        ChapterDTO chapter = new ChapterDTO(chapterID, nDAO.get(nid), chapterName, chapterURL, uploadDate);
-                                        lst.add(chapter);
-                                }
-                                return lst;
-                        }
-                } catch (Exception e) {
-                        e.printStackTrace();
+    public LinkedList<ChapterDTO> getChapters(String novelID) {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        LinkedList<ChapterDTO> lst = new LinkedList<>();
+        NovelDAO nDAO = new NovelDAO();
+        //get all chapter belong to a specific novel and order them by date
+        String sql = "SELECT * FROM Chapter WHERE novelID=? ORDER BY CONVERT(DATE, uploadDate) ASC";
+        try {
+            con = ConnectDB.makeConnection();
+            if (con != null) {
+                ps = con.prepareStatement(sql);
+                ps.setString(1, novelID);
+                rs = ps.executeQuery();
+                while (rs.next()) {
+                    String chapterID = rs.getString("chapterID");
+                    String chapterName = rs.getString("chapterName");
+                    String chapterURL = rs.getString("fileURL");
+                    String nid = rs.getString("novelID");
+                    Date uploadDate = rs.getDate("uploadDate");
+                    ChapterDTO chapter = new ChapterDTO(chapterID, nDAO.get(nid), chapterName, chapterURL, uploadDate);
+                    lst.add(chapter);
                 }
-                return null;
+                return lst;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        return null;
+    }
+
+    public ChapterDTO getChapterByChapterIDNovelID(String novelID, String chapterID) throws SQLException {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        NovelDAO nDAO = new NovelDAO();
+        String sql = "SELECT * FROM Chapter WHERE chapterID=? AND novelID=?";
+        try {
+            con = ConnectDB.makeConnection();
+            if (con != null) {
+                ps = con.prepareStatement(sql);
+                ps.setString(1, chapterID);
+                ps.setString(2, novelID);
+
+                rs = ps.executeQuery();
+                if (rs.next()) {
+                    String cID = rs.getString("chapterID");
+                    String nID = rs.getString("novelID");
+                    String chapterName = rs.getString("chapterName");
+                    String fileURL = rs.getString("fileURL");
+                    Date uploadDate = rs.getDate("uploadDate");
+
+                    ChapterDTO chap = new ChapterDTO(cID, nDAO.get(nID), chapterName, fileURL, uploadDate);
+                    return chap;
+                }
+            }
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            } catch (Exception e) {
+            }
+        }
+        return null;
+    }
 }

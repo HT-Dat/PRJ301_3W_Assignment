@@ -5,6 +5,8 @@
  */
 package comment;
 
+import account.AccountDTO;
+import chapter.ChapterDTO;
 import java.sql.Date;
 
 /**
@@ -13,13 +15,17 @@ import java.sql.Date;
  */
 public class CommentDTO {
     private String commentID;
-    private String userName;
-    private String novelID;
+    private ChapterDTO chapter;
+    private AccountDTO user;
     private String context;
     private Date commentDate;
-    private String chapterID;
 
-    public CommentDTO() {
+    public CommentDTO(String commentID, ChapterDTO chapter, AccountDTO user, String context, Date commentDate) {
+        this.commentID = commentID;
+        this.chapter = chapter;
+        this.user = user;
+        this.context = context;
+        this.commentDate = commentDate;
     }
 
     /**
@@ -37,31 +43,31 @@ public class CommentDTO {
     }
 
     /**
-     * @return the userName
+     * @return the chapter
      */
-    public String getUserName() {
-        return userName;
+    public ChapterDTO getChapter() {
+        return chapter;
     }
 
     /**
-     * @param userName the userName to set
+     * @param chapter the chapter to set
      */
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setChapter(ChapterDTO chapter) {
+        this.chapter = chapter;
     }
 
     /**
-     * @return the novelID
+     * @return the user
      */
-    public String getNovelID() {
-        return novelID;
+    public AccountDTO getUser() {
+        return user;
     }
 
     /**
-     * @param novelID the novelID to set
+     * @param user the user to set
      */
-    public void setNovelID(String novelID) {
-        this.novelID = novelID;
+    public void setUser(AccountDTO user) {
+        this.user = user;
     }
 
     /**
@@ -91,19 +97,5 @@ public class CommentDTO {
     public void setCommentDate(Date commentDate) {
         this.commentDate = commentDate;
     }
-
-    /**
-     * @return the chapterID
-     */
-    public String getChapterID() {
-        return chapterID;
-    }
-
-    /**
-     * @param chapterID the chapterID to set
-     */
-    public void setChapterID(String chapterID) {
-        this.chapterID = chapterID;
-    }
-
+    
 }
