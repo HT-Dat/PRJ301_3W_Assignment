@@ -77,10 +77,6 @@
             </c:if>
             <a class="goback" href="NovelServlet?a=novel_info&n=${currNovel.novelID}">Back to chapters list</a>
         </div>
-
-        <div class="chapterList">
-
-        </div>
         <div id="commentSection">
             <h3>Comments</h3>
             <c:if test="${sessionScope.user != null}">
