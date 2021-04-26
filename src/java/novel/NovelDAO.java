@@ -374,8 +374,6 @@ public class NovelDAO {
                                 String sql = "SELECT * "
                                         + "FROM Novel "
                                         + "WHERE name = ? AND author = ?";
-                                System.out.println(name);
-                                System.out.println(username);
                                 //3. Create statement and assign values 
                                 stm = con.prepareStatement(sql);
                                 stm.setString(1, name);

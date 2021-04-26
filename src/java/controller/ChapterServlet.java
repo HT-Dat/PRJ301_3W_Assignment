@@ -98,6 +98,7 @@ public class ChapterServlet extends HttpServlet {
                     java.sql.Date uploadDate = new Date(System.currentTimeMillis());
                     ChapterDTO chap = new ChapterDTO(chapID, n, chapName, fileURL, uploadDate);
                     boolean create = createFile(chap, content);
+                    System.out.println(create);
                     if (create == false) {
                         response.sendRedirect("error.jsp");
                     } else {
