@@ -59,9 +59,8 @@
                         </div>
                 </div>
                 <c:set var="user" value="${sessionScope.user}"/>
-
-                <%--Properly headings for each action--%>
                 <div class="n-container">
+                        <%--Properly headings for each action--%>
                         <c:if test="${tag != null}">
                                 <h1 style="margin-left: 2%;">We found ${size} novel(s) with tag: ${tag.tagName}</h1>
                         </c:if>
@@ -71,8 +70,8 @@
                         <c:if test="${BookmarkFlag != null}">
                                 <h1 style="color:red; font-size: 150%; text-align: center">${BookmarkFlag}</h1>
                         </c:if>
-                        <c:if test="${addFlag != null}">
-                                <h1 style="color:red; font-size: 150%; text-align: center">Your Novels</h1>
+                        <c:if test="${novelFlag != null}">
+                                <h1 style="color:red; font-size: 150%; text-align: center">${novelFlag}</h1>
                         </c:if>
                         <c:if test="${not empty novelList}">
                                 <ul class="n-list">
@@ -81,8 +80,8 @@
                                                         <a href="NovelServlet?action=NovelInfo&nid=${novel.novelID}"><img class="cover" src="${pageContext.request.contextPath}/images/covers/${novel.coverURL}"/></a>
                                                         <a class="n-title" href="NovelServlet?action=NovelInfo&n=${novel.novelID}">${novel.novelName}</a>
                                                         <p>${novel.author.getUserName()}</p>
-                                                        <c:if test="${addFlag != null}">
-                                                                <a href="ChapterServlet?action=AddChapterForm&nid=${novel.novelID}">Add new chapter</a>
+                                                        <c:if test="${user.userName.equals(novel.author.userName)}">
+                                                                <a style="color: red" href="ChapterServlet?action=AddChapterForm&nid=${novel.novelID}">Add new chapter</a>
                                                         </c:if>
                                                         <c:if test="${user.isAdmin == true || user.userName.equals(novel.author.userName)}">
                                                                 <p><a href="NovelServlet?action=DeleteNovel&nid=${novel.novelID}" onclick="return confirm('This action will remove all chapters in this novel.\nAre you sure ?')" class="del">Delete</a></p>
@@ -117,7 +116,7 @@
                         <c:when test="${user != null}">
                                 <div class="side-box">
                                         <a href="NovelServlet?action=AddNovelForm">Add a novel</a><br>
-                                        <a href="NovelServlet?action=YourNovelList&u=${user.userName}">Your novels</a><br>
+                                        <a href="NovelServlet?action=YourNovelList&username=${user.userName}">Your novels</a><br>
                                         <a href="BookmarkServlet?action=BookmarkList">Bookmark</a><br>
                                 </div>
                         </c:when>

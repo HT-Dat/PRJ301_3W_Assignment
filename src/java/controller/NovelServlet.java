@@ -146,6 +146,23 @@ public class NovelServlet extends HttpServlet {
                     request.setAttribute("novelList", novelList);
                     request.getRequestDispatcher("Homepage.jsp").forward(request, response);
                 }
+            } else if (action.equals("AddNovelForm")) {
+                    request.getRequestDispatcher("AddNovelForm");
+            } else if(action.equals("YourNovelList")) {
+                    //get username from action
+                    String username =request.getParameter("username");
+                    //get all novels which have author's name = username inputted
+                    ArrayList<NovelDTO> nList = nDAO.getUserNovels(username);
+                    if(nList.size() > 0) {
+                            request.setAttribute("novelList", nList);
+                            request.setAttribute("novelFlag", "Your Novel(s)");
+                            request.setAttribute("size", nList.size());
+                    } else {
+                            request.setAttribute("NoNovelNameError", "Sorry, you have yet any novel in our database");
+                    }
+                    request.getRequestDispatcher("Homepage.jsp").forward(request, response);
+            } else if(action.equals("UpdateNovelForm")) {
+                    
             }
         }
     }
