@@ -75,11 +75,13 @@ public class LoginServlet extends HttpServlet {
                 request.setAttribute("novelList", novelList);
                 request.getRequestDispatcher("Homepage.jsp").forward(request, response);
             }
-        }
-        else if(action.equals("logout")){
+        } else if(action.equals("logout")){
             HttpSession session = request.getSession(false);
             session.invalidate();
             response.sendRedirect("NovelServlet");
+        } else if(action.equals("invalid")) {
+                request.setAttribute("noti", "You must login to perform that action");
+                request.getRequestDispatcher("LoginForm.jsp").forward(request, response);
         }
     }
 
