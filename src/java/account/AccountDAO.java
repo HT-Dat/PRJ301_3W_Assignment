@@ -39,9 +39,6 @@ public class AccountDAO {
                     return acc;
                 }
             }
-
-        } catch (Exception e) {
-            e.printStackTrace();
         } finally {
             if (rs != null) {
                 rs.close();
@@ -55,7 +52,41 @@ public class AccountDAO {
         }
         return null;
     }
-
+    public AccountDTO getByEmail(String email) throws SQLException{
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            con = ConnectDB.makeConnection();
+            if (con != null) {
+                ps = con.prepareStatement("SELECT * "
+                        + "FROM Account "
+                        + "WHERE email = ?");
+                ps.setString(1, email);
+                rs = ps.executeQuery();
+                if (rs.next()) {
+                    String username = rs.getString("username");
+                    String password = rs.getString("password");
+                    String name = rs.getString("name");
+                    boolean isAdmin = Boolean.parseBoolean(rs.getString("isAdmin"));
+                    String avatarURL = rs.getString("avatarURL");
+                    AccountDTO acc = new AccountDTO(username, email, password, name, isAdmin, avatarURL);
+                    return acc;
+                }
+            }
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (ps != null) {
+                ps.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+        return null;
+    }
     public boolean checkLogin(String username, String password) throws SQLException {
         Connection con = null;
         PreparedStatement pstm = null;
