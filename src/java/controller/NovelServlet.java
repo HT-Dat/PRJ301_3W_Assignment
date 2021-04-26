@@ -129,7 +129,6 @@ public class NovelServlet extends HttpServlet {
                                 //first, delete the novel from database
                                 String nid = request.getParameter("nid");
                                 NovelDTO n = nDAO.get(nid);
-                                request.setAttribute("del_done", "Novel" + n.getNovelName() + "has been successfully deleted!");
                                 if (n == null) {
                                         request.setAttribute("NOVELNOTFOUND", "Could not find this novel");
                                         request.getRequestDispatcher("error.jsp").forward(request, response);
