@@ -233,17 +233,17 @@ public class NovelServlet extends HttpServlet {
                                         nextChapter = cList.get(index+1);
                                 }
                                 if(prvChapter != null) {
-                                        request.setAttribute("prvChaper", prvChapter);
+                                        request.setAttribute("prevChap", prvChapter);
                                 }
                                 if(nextChapter != null) {
-                                        request.setAttribute("nextChapter", nextChapter);
+                                        request.setAttribute("nextChap", nextChapter);
                                 }
                                 //get all comments of current chapter
                                 LinkedList<CommentDTO> cmtList = cmDAO.searchCmtByChapter(nid, cid);
-                                request.setAttribute("cmtList", cmtList);
-                                request.setAttribute("currentNovel", currentNovel);
+                                request.setAttribute("comments", cmtList);
+                                request.setAttribute("currNovel", currentNovel);
                                 request.setAttribute("currentChapter", currentChap);
-                                request.setAttribute("chapData", linesFromFile);
+                                request.setAttribute("chapLines", linesFromFile);
                                 request.getRequestDispatcher("ReadChapter.jsp").forward(request, response);
                         }
                 }
