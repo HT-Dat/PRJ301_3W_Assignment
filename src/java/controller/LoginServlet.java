@@ -58,8 +58,6 @@ public class LoginServlet extends HttpServlet {
 
                 //if isValid = false -> setAttribute("success", isValid) and dispatch to login_form.jsp
                 if (isValid == false) {
-                    request.setAttribute("success", isValid);
-                    request.setAttribute("username", username);
                     request.getRequestDispatcher("LoginForm.jsp").forward(request, response);
 
                 } //else redirect to NovelServlet

@@ -24,7 +24,7 @@ import utils.ConnectDB;
  * @author Gray
  */
 public class NovelDAO {
-
+        
         public NovelDAO() {
         }
 
@@ -428,6 +428,52 @@ public class NovelDAO {
                         }
                 }
                 return dto;
+        }
+        
+        public ArrayList<NovelDTO> getNovelListByID(ArrayList<String> idList) {
+                Connection con = null;
+                PreparedStatement ps = null;
+                ResultSet rs = null;
+                ArrayList<NovelDTO> nList = new ArrayList<>();
+                AccountDAO accDAO = new AccountDAO();
+
+                String sql = "SELECT * FROM Novel WHERE novelID=?";
+                try {
+                        con = ConnectDB.makeConnection();
+                        if (con != null) {
+                                ps = con.prepareStatement(sql);
+                                for (String id : idList) {
+                                        ps.setString(1, id);
+                                        rs = ps.executeQuery();
+                                        if (rs.next()) {
+                                                String novelName = rs.getString("name");
+                                                String coverURL = rs.getString("coverURL");
+                                                String author = rs.getString("author");
+                                                AccountDTO acc = accDAO.getAccountByUsername(author);
+                                                NovelDTO n = new NovelDTO(id, novelName, acc, coverURL);
+                                                nList.add(n);
+                                        }
+                                }
+                                return nList;
+                        }
+                } catch (Exception e) {
+                        e.printStackTrace();
+                } finally {
+                        try {
+                                if (rs != null) {
+                                        rs.close();
+                                }
+                                if (ps != null) {
+                                        ps.close();
+                                }
+                                if (con != null) {
+                                        con.close();
+                                }
+                        } catch (Exception e) {
+                                e.printStackTrace();
+                        }
+                }
+                return nList;
         }
 
         public boolean addTagMap(String novelID, String tagID) {

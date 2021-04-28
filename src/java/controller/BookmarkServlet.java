@@ -5,13 +5,19 @@
  */
 package controller;
 
+import account.AccountDTO;
+import bookmark.BookmarkDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import novel.NovelDAO;
+import novel.NovelDTO;
 
 /**
  *
@@ -32,18 +38,35 @@ public class BookmarkServlet extends HttpServlet {
         protected void processRequest(HttpServletRequest request, HttpServletResponse response)
                 throws ServletException, IOException {
                 response.setContentType("text/html;charset=UTF-8");
-                try (PrintWriter out = response.getWriter()) {
-                        /* TODO output your page here. You may use following sample code. */
-                        out.println("<!DOCTYPE html>");
-                        out.println("<html>");
-                        out.println("<head>");
-                        out.println("<title>Servlet BookmarkServlet</title>");                        
-                        out.println("</head>");
-                        out.println("<body>");
-                        out.println("<h1>Servlet BookmarkServlet at " + request.getContextPath() + "</h1>");
-                        out.println("</body>");
-                        out.println("</html>");
+                HttpSession session = request.getSession();
+                AccountDTO user = (AccountDTO) session.getAttribute("user");
+                String novelID = request.getParameter("id");
+                String ERROR = "error.jsp";
+                BookmarkDAO bDAO = new BookmarkDAO();
+                NovelDAO nDAO = new NovelDAO();
+                String action = request.getParameter("action");
+                //action = bull -> add or remove bookmark of a novel
+                if (action == null) {
+                        if (user != null) {
+                                if (bDAO.bookmarkHandler(user.getUserName(), novelID)) {
+                                        request.getRequestDispatcher("NovelServlet?action=NovelInfo&nid=" + novelID).forward(request, response);
+                                } else {
+                                        response.sendRedirect(ERROR);
+                                }
+                        } else {
+                                response.sendRedirect("LoginForm.jsp");
+                        }
+                } else if (action.equals("BookmarkList")) {
+                        ArrayList<String> bidList = bDAO.getBookmarkIDList(user);
+                        ArrayList<NovelDTO> nList = nDAO.getNovelListByID(bidList);
+                        if (nList.size() > 0) {
+                                request.setAttribute("novelList", nList);
+                                request.setAttribute("BOOKMARKFLAG", "Your Bookmarks");
+                        } else {
+                                request.setAttribute("EMPTYBOOKMARK", "You haven't bookmarked any novel yet!");
+                        }
                 }
+                request.getRequestDispatcher("Homepage.jsp").forward(request, response);
         }
 
         // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
