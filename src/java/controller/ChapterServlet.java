@@ -49,7 +49,6 @@ public class ChapterServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         String action = request.getParameter("action");
         HttpSession session = request.getSession(false);
-        System.out.println(action);
         try {
             if (session.getAttribute("user") == null) {
                 response.sendRedirect("LoginServlet");
@@ -60,23 +59,8 @@ public class ChapterServlet extends HttpServlet {
                     NovelDTO novel = nDAO.get(nid);
                     request.setAttribute("novelObj", novel);
                     request.getRequestDispatcher("AddChapterForm.jsp").forward(request, response);
-                    
-                    
-                    
-                    
-                    
-                // B E W A R E
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
+
+                    // B E W A R E
                 } else if (action.equals("add")) {
                     String novelID = request.getParameter("nid");
                     String chapID = "C1";
@@ -100,7 +84,7 @@ public class ChapterServlet extends HttpServlet {
                     boolean create = createFile(chap, content);
                     System.out.println(create);
                     if (create == false) {
-                        response.sendRedirect("error.jsp");
+                        response.sendRedirect("Error.jsp");
                     } else {
                         cDAO.add(chap);
                         response.sendRedirect("NovelServlet");
@@ -116,12 +100,14 @@ public class ChapterServlet extends HttpServlet {
                         response.sendRedirect("NovelServlet?action=NovelInfo&nid=" + chap.getNovel().getNovelID());
                     } else {
                         request.setAttribute("CHAPTERNOTFOUND", "Could not find this chapter");
-                        request.getRequestDispatcher("error.jsp").forward(request, response);
+                        request.getRequestDispatcher("Error.jsp").forward(request, response);
                     }
                 }
             }
-        } catch (SQLException | IOException ex) {
+        } catch (Exception ex) {
             log(ex.getMessage());
+            request.setAttribute("CHAPTERNOTFOUND", "Sorry, something went wrong");
+            request.getRequestDispatcher("Error.jsp").forward(request, response);
         }
     }
 

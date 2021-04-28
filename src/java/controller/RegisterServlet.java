@@ -95,6 +95,8 @@ public class RegisterServlet extends HttpServlet {
             }
         } catch (SQLException ex) {
             log(ex.getMessage());
+            request.setAttribute("CHAPTERNOTFOUND", "Sorry, something went wrong");
+            request.getRequestDispatcher("Error.jsp").forward(request, response);
         }
     }
 
@@ -128,7 +130,7 @@ public class RegisterServlet extends HttpServlet {
                     outputStream.close();
                 }
             }
-        } catch (IOException | ServletException e) {
+        } catch (Exception e) {
             log(e.getMessage());
             fileName = "";
         }

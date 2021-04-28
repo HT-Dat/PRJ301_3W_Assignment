@@ -42,46 +42,47 @@ public class LoginServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         String action = request.getParameter("action");
-        
-        //if a==null -> redirect to login_form.jsp
-        if(action == null){
-            response.sendRedirect("LoginForm.jsp");
-        }
-        
-        //if a = login
-        else if(action.equals("login")){
-            String username = request.getParameter("username");
-            String pass = request.getParameter("password");
-            AccountDAO dao = new AccountDAO();
-            NovelDAO ndao = new NovelDAO();
-            
-            //check login
-            boolean isValid = dao.checkLogin(username, pass);
-            
-            //if isValid = false -> setAttribute("success", isValid) and dispatch to login_form.jsp
-            if(isValid == false){
-                request.setAttribute("success", isValid);
-                request.setAttribute("username", username);
-                request.getRequestDispatcher("LoginForm.jsp").forward(request, response);
-                
-            }
-            
-            //else redirect to NovelServlet
-            else{
-                AccountDAO aDAO = new AccountDAO();
-                HttpSession session = request.getSession();
-                session.setAttribute("user", aDAO.getAccountByUsername(username));
-                ArrayList<NovelDTO> novelList = (ArrayList<NovelDTO>) ndao.getAll();
-                request.setAttribute("novelList", novelList);
-                request.getRequestDispatcher("Homepage.jsp").forward(request, response);
-            }
-        } else if(action.equals("logout")){
-            HttpSession session = request.getSession(false);
-            session.invalidate();
-            response.sendRedirect("NovelServlet");
-        } else if(action.equals("invalid")) {
+        try {
+            //if a==null -> redirect to login_form.jsp
+            if (action == null) {
+                response.sendRedirect("LoginForm.jsp");
+            } //if a = login
+            else if (action.equals("login")) {
+                String username = request.getParameter("username");
+                String pass = request.getParameter("password");
+                AccountDAO dao = new AccountDAO();
+                NovelDAO ndao = new NovelDAO();
+
+                //check login
+                boolean isValid = dao.checkLogin(username, pass);
+
+                //if isValid = false -> setAttribute("success", isValid) and dispatch to login_form.jsp
+                if (isValid == false) {
+                    request.setAttribute("success", isValid);
+                    request.setAttribute("username", username);
+                    request.getRequestDispatcher("LoginForm.jsp").forward(request, response);
+
+                } //else redirect to NovelServlet
+                else {
+                    AccountDAO aDAO = new AccountDAO();
+                    HttpSession session = request.getSession();
+                    session.setAttribute("user", aDAO.getAccountByUsername(username));
+                    ArrayList<NovelDTO> novelList = (ArrayList<NovelDTO>) ndao.getAll();
+                    request.setAttribute("novelList", novelList);
+                    request.getRequestDispatcher("Homepage.jsp").forward(request, response);
+                }
+            } else if (action.equals("logout")) {
+                HttpSession session = request.getSession(false);
+                session.invalidate();
+                response.sendRedirect("NovelServlet");
+            } else if (action.equals("invalid")) {
                 request.setAttribute("noti", "You must login to perform that action");
                 request.getRequestDispatcher("LoginForm.jsp").forward(request, response);
+            }
+        } catch (Exception ex) {
+            log(ex.getMessage());
+            request.setAttribute("CHAPTERNOTFOUND", "Sorry, something went wrong");
+            request.getRequestDispatcher("Error.jsp").forward(request, response);
         }
     }
 
@@ -104,7 +105,7 @@ public class LoginServlet extends HttpServlet {
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(LoginServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
-     
+
     }
 
     /**
