@@ -132,6 +132,42 @@ public class NovelServlet extends HttpServlet {
                                 request.setAttribute("NoNovelNameError", "Sorry, we don't find any novel with keyword" + keyword);
                         }
                         request.getRequestDispatcher("Homepage.jsp").forward(request, response);
+                } else if (action.equals("read")) {
+                        String nid = request.getParameter("nid");
+                        String cid = request.getParameter("cid");
+                        String filepath = getServletContext().getRealPath("") + "/Novels/" + nid + "/" + cid + ".txt";
+                        ArrayList<String> linesFromFile = new ArrayList<>();
+                        linesFromFile = (ArrayList<String>) readFile(filepath);
+                        NovelDTO currentNovel = nDAO.get(nid);
+                        //get all chapters of a novel based on novel id
+                        LinkedList<ChapterDTO> cList = cDAO.getChapters(nid);
+                        int index = cDAO.searchChapterInList(cList, nid, cid);
+                        ChapterDTO currentChap = cList.get(index);
+                        //get previous chapter
+                        ChapterDTO prvChapter = null;
+                        ChapterDTO nextChapter = null;
+                        //if current chapter is not first chapter
+                        if (index - 1 >= 0) {
+                                prvChapter = cList.get(index - 1);
+                        }
+                        //if current chapter is not last chapter
+                        if (index + 1 < cList.size()) {
+                                nextChapter = cList.get(index + 1);
+                        }
+                        if (prvChapter != null) {
+                                request.setAttribute("prevChap", prvChapter);
+                        }
+                        if (nextChapter != null) {
+                                request.setAttribute("nextChap", nextChapter);
+                        }
+                        //get all comments of current chapter
+                        LinkedList<CommentDTO> cmtList = cmDAO.searchCmtByChapter(nid, cid);
+                        request.setAttribute("comments", cmtList);
+                        request.setAttribute("currNovel", currentNovel);
+                        System.out.println(currentChap);
+                        request.setAttribute("currChapter", currentChap);
+                        request.setAttribute("chapLines", linesFromFile);
+                        request.getRequestDispatcher("ReadChapter.jsp").forward(request, response);
                 } else if (session.getAttribute("user") != null) { //Actions only available if you logged in 
                         AccountDTO user = (AccountDTO) session.getAttribute("user");
                         if (action.equals("DeleteNovel")) {
@@ -140,7 +176,7 @@ public class NovelServlet extends HttpServlet {
                                 NovelDTO n = nDAO.get(nid);
                                 if (n == null) {
                                         request.setAttribute("NOVELNOTFOUND", "Could not find this novel");
-                                        request.getRequestDispatcher("error.jsp").forward(request, response);
+                                        request.getRequestDispatcher("Error.jsp").forward(request, response);
                                 } else {
                                         request.setAttribute("del_done", "Novel" + n.getNovelName() + "has been successfully deleted!");
                                         //if novel has any cover other than the default one, delete it
@@ -170,8 +206,9 @@ public class NovelServlet extends HttpServlet {
                                         //if this novel exist in database, return to add form with duplicated novel error
                                         NovelDTO dupNovel = nDAO.getByNameAndUsername(novelName, user.getUserName());
                                         request.setAttribute("duplicatedNovel", dupNovel);
+                                        request.setAttribute("duplicateError", "This novel has already been added, do you want to add new chapters to it?");
                                         request.setAttribute("novelName", novelName);
-                                        request.getRequestDispatcher("AddChapterForm.jsp").forward(request, response);
+                                        request.getRequestDispatcher("AddNovelForm.jsp").forward(request, response);
                                 } else {
                                         String novelID = "N1";
                                         //Start with N1 then increment the number unitl no ID with this number has been found
@@ -210,41 +247,6 @@ public class NovelServlet extends HttpServlet {
                                         request.setAttribute("NoNovelNameError", "Sorry, you have yet any novel in our database");
                                 }
                                 request.getRequestDispatcher("Homepage.jsp").forward(request, response);
-                        } else if (action.equals("read")) {
-                                String nid = request.getParameter("nid");
-                                String cid = request.getParameter("cid");
-                                String filepath = getServletContext().getRealPath("") + "/Novels/" + nid + "/" + cid + ".txt";
-                                ArrayList<String> linesFromFile = new ArrayList<>();
-                                linesFromFile = (ArrayList<String>) readFile(filepath);
-                                NovelDTO currentNovel = nDAO.get(nid);
-                                //get all chapters of a novel based on novel id
-                                LinkedList<ChapterDTO> cList = cDAO.getChapters(nid);
-                                int index = cDAO.searchChapterInList(cList, nid, cid);
-                                ChapterDTO currentChap = cList.get(index);
-                                //get previous chapter
-                                ChapterDTO prvChapter = null;
-                                ChapterDTO nextChapter = null;
-                                //if current chapter is not first chapter
-                                if(index - 1 >= 0) {
-                                        prvChapter = cList.get(index-1);
-                                }
-                                //if current chapter is not last chapter
-                                if(index + 1 <cList.size()) {
-                                        nextChapter = cList.get(index+1);
-                                }
-                                if(prvChapter != null) {
-                                        request.setAttribute("prevChap", prvChapter);
-                                }
-                                if(nextChapter != null) {
-                                        request.setAttribute("nextChap", nextChapter);
-                                }
-                                //get all comments of current chapter
-                                LinkedList<CommentDTO> cmtList = cmDAO.searchCmtByChapter(nid, cid);
-                                request.setAttribute("comments", cmtList);
-                                request.setAttribute("currNovel", currentNovel);
-                                request.setAttribute("currentChapter", currentChap);
-                                request.setAttribute("chapLines", linesFromFile);
-                                request.getRequestDispatcher("ReadChapter.jsp").forward(request, response);
                         }
                 }
         }
@@ -260,7 +262,7 @@ public class NovelServlet extends HttpServlet {
 
         public void deleteCover(String novelID) {
                 //get location of the cover image
-                String filepath = getServletContext().getRealPath("") + "/images/covers/" + novelID + ".jpg";
+                String filepath = getServletContext().getRealPath("") + "/images/covers/" + novelID;
                 File file = new File(filepath);
                 //delete if exist, ignore if empty
                 if (!file.exists()) {
@@ -280,15 +282,16 @@ public class NovelServlet extends HttpServlet {
                         directory.delete();
                 }
         }
-        
+
         public void createFolder(String novelID) {
-                String path = getServletContext().getRealPath("") + "novels\\" + novelID;
+                String path = getServletContext().getRealPath("") + "/novels/" + novelID;
                 File folder = new File(path);
                 if (!folder.exists()) {
+                        System.out.println("Output folder path: " + path);
                         folder.mkdir();
                 }
         }
-        
+
         private String uploadFile(HttpServletRequest request, String novelID) throws ServletException {
                 String fileName = "";
                 try {
@@ -300,6 +303,7 @@ public class NovelServlet extends HttpServlet {
                         OutputStream outputStream = null;
                         try {
                                 File outputFilePath = new File(basePath + fileName);
+                                System.out.println("outputFilePath: " + outputFilePath);
                                 inputStream = filePart.getInputStream();
                                 outputStream = new FileOutputStream(outputFilePath);
                                 int read = 0;
@@ -324,15 +328,12 @@ public class NovelServlet extends HttpServlet {
                 System.out.println(fileName);
                 return fileName;
         }
-        
+
         public List<String> readFile(String filepath) {
                 Path path = Paths.get(filepath);
                 List<String> linesList = new ArrayList<>();
                 try {
                         linesList = Files.readAllLines(path, StandardCharsets.UTF_8);
-                        for (String string : linesList) {
-                                System.out.println(string);
-                        }
                         return linesList;
                 } catch (Exception e) {
                         e.printStackTrace();

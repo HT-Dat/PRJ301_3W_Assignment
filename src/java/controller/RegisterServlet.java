@@ -83,7 +83,7 @@ public class RegisterServlet extends HttpServlet {
                 } //else -> add account to database, set session, then redirect to NovelServlet
                 else {
                     if (avatarURL.equals("")) {
-                        avatarURL = "defaultAvatar.png";
+                        avatarURL = "default_ava.png";
                     }
                     AccountDTO newAccount = new AccountDTO(username, password, email, name, false, avatarURL);
                     AccountDAO aDAO = new AccountDAO();

@@ -63,9 +63,9 @@
                         <input type="hidden" value="AddNovelDB" name="action">
                         <fieldset>
                                 <legend><h1>Add a novel</h1></legend>
-                                <c:if test="${DUPLICATEDNOVELERROR != null}">
-                                        <p style="color: red">${DUPLICATEDNOVELERROR}</p>
-                                        <button><a href="ChapterServlet?a=addchapform&nid=${dupNovelObj.novelID}">Add a new Chapter</a></button>
+                                <c:if test="${duplicateError != null}">
+                                        <p style="color: red">${duplicateError}</p>
+                                        <button><a href="ChapterServlet?a=addchapform&nid=${duplicatedNovel.novelID}">Add a new Chapter</a></button>
                                 </c:if>
                                 <div>
                                         <label for="coverURL"><h1>Novel name</h1></label>
