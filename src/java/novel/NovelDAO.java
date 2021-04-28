@@ -266,6 +266,35 @@ public class NovelDAO {
                 return false;
         }
 
+        // update a novel based on novelID
+        public boolean updateNovel(NovelDTO n) throws SQLException {
+                Connection con = null;
+                PreparedStatement ps = null;
+                String sql = "UPDATE Novel SET name=?, author=?, coverURL=? WHERE novelID=?";
+                try {
+                        con = ConnectDB.makeConnection();
+                        if (con != null) {
+                                ps = con.prepareStatement(sql);
+                                ps.setString(1, n.getNovelName());
+                                ps.setString(2, n.getAuthor().getUserName());
+                                ps.setString(3, n.getCoverURL());
+                                ps.setString(4, n.getNovelID());
+                                ps.executeUpdate();
+                                return true;
+                        }
+                } catch (SQLException e) {
+                        e.printStackTrace();
+                } finally {
+                        if (ps != null) {
+                                ps.close();
+                        }
+                        if (con != null) {
+                                con.close();
+                        }
+                }
+                return false;
+        }
+
         public NovelDTO getByUsernameAuthor(String AuthorName) throws SQLException, ClassNotFoundException {
                 Connection con = null;
                 PreparedStatement stm = null;

@@ -1,0 +1,82 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Mar 19, 2021, 7:29:46 AM
+    Author     : Gray
+*/
+* {
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    width: 100%;
+    height: 100%;
+    background-color: antiquewhite;
+}
+
+#form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+fieldset {
+    width: 35%;
+    border-radius: 1rem;
+    padding: 1% 1%;
+    background-color: #ffffff;
+}
+
+legend {
+    margin-left: 5%;
+}
+
+.input {
+    width: 50%;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 7px;
+    box-sizing: border-box;
+    outline-color: #4CAF50;
+    padding: 0.2rem;
+}
+
+.input:focus {
+    box-shadow: 0 0 5px #4CAF50;
+}
+
+#submitBtn{
+    background-color: #6cff77;
+    margin-top: 3%;
+    cursor: pointer;
+    padding: 10px 14px;
+    margin-right: 5%;
+    border-radius: 15px;
+    transition: all 0.5s ease-in-out;
+}
+
+#cancel{
+    background-color: #ff6868;
+    margin-top: 3%;
+    cursor: pointer;
+    padding: 10px 14px;
+    margin-right: 5%;
+    border-radius: 15px;
+    transition: all 0.5s ease-in-out;
+}
+
+#submitBtn:hover{
+    background-color: #00b215;
+    box-shadow: 0 0 10px rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+}
+
+#cancel:hover{
+    background-color: #c70000;
+}
+
