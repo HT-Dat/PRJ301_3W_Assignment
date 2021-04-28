@@ -13,12 +13,6 @@
         <title>Error Page</title>
     </head>
     <body>
-        <h1>ERROR</h1>
-        <h2>${ACCOUNTNOTFOUNDERROR}</h2>
-        <h2>${DUPLICATEDEMAILERROR}</h2>
-        <h2>${UPDATEFAILDERROR}</h2>
-        <h2>${TAGNOTFOUNDERROR}</h2>
-        <h2>${NOVELNOTFOUND}</h2>
-        <h2>${CHAPTERNOTFOUND}</h2>
+        <h1>${noti}</h1>
     </body>
 </html>

@@ -70,12 +70,12 @@
                 </div>
                 <div class="navigator">
                         <c:if test="${prevChap != null}">
-                                <a class="fw" href="NovelServlet?a=read&n=${prevChap.novel.novelID}&c=${prevChap.chapterID}" class="changeChapter">Previous Chapter</a>
+                                <a class="fw" href="NovelServlet?a=read&nid=${prevChap.novel.novelID}&cid=${prevChap.chapterID}" class="changeChapter">Previous Chapter</a>
                         </c:if>
                         <c:if test="${nextChap != null}">
-                                <a class="fw" href="NovelServlet?a=read&n=${nextChap.novel.novelID}&c=${nextChap.chapterID}" class="changeChapter">Next Chapter</a>
+                                <a class="fw" href="NovelServlet?a=read&nid=${nextChap.novel.novelID}&cid=${nextChap.chapterID}" class="changeChapter">Next Chapter</a>
                         </c:if>
-                        <a class="goback" href="NovelServlet?a=novel_info&n=${currNovel.novelID}">Back to chapters list</a>
+                        <a class="goback" href="NovelServlet?a=NovelInfo&n=${currNovel.novelID}">Back to chapters list</a>
                 </div>
                 <div id="commentSection">
                         <h3>Comments</h3>

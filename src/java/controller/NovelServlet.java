@@ -224,6 +224,7 @@ public class NovelServlet extends HttpServlet {
                         if (coverURL.equals("")) {
                             coverURL = "defaultCover.png";
                         } else {
+<<<<<<< Updated upstream
                             coverURL = this.uploadFile(request, novelID);
                         }
                         novelName = new String(novelName.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
@@ -232,6 +233,177 @@ public class NovelServlet extends HttpServlet {
                         createFolder(novelID);
                         for (String tagID : tagIDList) {
                             nDAO.addTagMap(novelID, tagID);
+=======
+                                request.setAttribute("NoNovelNameError", "Sorry, we don't find any novel with keyword" + keyword);
+                        }
+                        request.getRequestDispatcher("Homepage.jsp").forward(request, response);
+                } else if (action.equals("read")) {
+                        String nid = request.getParameter("nid");
+                        String cid = request.getParameter("cid");
+                        String filepath = getServletContext().getRealPath("") + "/novels/" + nid + "/" + cid + ".txt";
+                        ArrayList<String> linesFromFile = new ArrayList<>();
+                        linesFromFile = (ArrayList<String>) readFile(filepath);
+                        NovelDTO currentNovel = nDAO.get(nid);
+                        //get all chapters of a novel based on novel id
+                        LinkedList<ChapterDTO> cList = cDAO.getChapters(nid);
+                        int index = cDAO.searchChapterInList(cList, nid, cid);
+                        ChapterDTO currentChap = cList.get(index);
+                        //get previous chapter
+                        ChapterDTO prvChapter = null;
+                        ChapterDTO nextChapter = null;
+                        //if current chapter is not first chapter
+                        if (index - 1 >= 0) {
+                                prvChapter = cList.get(index - 1);
+                        }
+                        //if current chapter is not last chapter
+                        if (index + 1 < cList.size()) {
+                                nextChapter = cList.get(index + 1);
+                        }
+                        if (prvChapter != null) {
+                                request.setAttribute("prevChap", prvChapter);
+                        }
+                        if (nextChapter != null) {
+                                request.setAttribute("nextChap", nextChapter);
+                        }
+                        //get all comments of current chapter
+                        LinkedList<CommentDTO> cmtList = cmDAO.searchCmtByChapter(nid, cid);
+                        request.setAttribute("comments", cmtList);
+                        request.setAttribute("currNovel", currentNovel);
+                        request.setAttribute("currChapter", currentChap);
+                        request.setAttribute("chapLines", linesFromFile);
+                        request.getRequestDispatcher("ReadChapter.jsp").forward(request, response);
+                } else if (session.getAttribute("user") != null) { //Actions only available if you logged in 
+                        AccountDTO user = (AccountDTO) session.getAttribute("user");
+                        if (action.equals("DeleteNovel")) {
+                                //first, delete the novel from database
+                                String nid = request.getParameter("nid");
+                                NovelDTO n = nDAO.get(nid);
+                                if (n == null) {
+                                        request.setAttribute("NOVELNOTFOUND", "Could not find this novel");
+                                        request.getRequestDispatcher("Error.jsp").forward(request, response);
+                                } else {
+                                        request.setAttribute("del_done", "Novel" + n.getNovelName() + "has been successfully deleted!");
+                                        //if novel has any cover other than the default one, delete it
+                                        if (!n.getCoverURL().equals("defaultCover.png")) {
+                                                deleteCover(nid);
+                                        }
+                                        //then delete the novel from database
+                                        nDAO.delete(nid);
+                                        //finally delete the novel's files
+                                        deleteFile(nid);
+                                        ArrayList<NovelDTO> novelList = (ArrayList<NovelDTO>) nDAO.getAll();
+                                        request.setAttribute("novelList", novelList);
+                                        request.getRequestDispatcher("Homepage.jsp").forward(request, response);
+                                }
+                        } else if (action.equals("AddNovelForm")) {
+                                request.getRequestDispatcher("AddNovelForm.jsp").forward(request, response);
+                        } else if (action.equals("AddNovelDB")) {
+                                String novelName = request.getParameter("novelName");
+                                ArrayList<NovelDTO> nList = (ArrayList) nDAO.getAll();
+                                String[] tagIDList = request.getParameterValues("tag");
+                                //if number of tags not between 1 and 5, set error and redirect back to add form
+                                if (tagIDList == null || tagIDList.length > 5) {
+                                        request.setAttribute("TAGERROR", "Only choose between 1-5 tags!!");
+                                        request.setAttribute("novelName", novelName);
+                                        request.getRequestDispatcher("AddChapterForm.jsp").forward(request, response);
+                                } else if (nDAO.getByNameAndUsername(novelName, user.getUserName()) != null) {
+                                        //if this novel exist in database, return to add form with duplicated novel error
+                                        NovelDTO dupNovel = nDAO.getByNameAndUsername(novelName, user.getUserName());
+                                        request.setAttribute("duplicatedNovel", dupNovel);
+                                        request.setAttribute("duplicateError", "This novel has already been added, do you want to add new chapters to it?");
+                                        request.setAttribute("novelName", novelName);
+                                        request.getRequestDispatcher("AddNovelForm.jsp").forward(request, response);
+                                } else {
+                                        String novelID = "N1";
+                                        //Start with N1 then increment the number unitl no ID with this number has been found
+                                        for (NovelDTO novel : nList) {
+                                                if (novel.getNovelID().equalsIgnoreCase(novelID)) {
+                                                        //increment the number after the N letter
+                                                        novelID = "N" + (Integer.parseInt(novelID.substring(1) + 1));
+                                                }
+                                        }
+                                        //get cover's image path from input
+                                        String coverURL = getFileName(request.getPart("coverURL"));
+                                        if (coverURL.equals("")) {
+                                                coverURL = "defaultCover.png";
+                                        } else {
+                                                coverURL = this.uploadFile(request, novelID);
+                                        }
+                                        novelName = new String(novelName.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
+                                        NovelDTO newNovel = new NovelDTO(novelID, novelName, user, coverURL);
+                                        nDAO.add(newNovel);
+                                        createFolder(novelID);
+                                        for (String tagID : tagIDList) {
+                                                nDAO.addTagMap(novelID, tagID);
+                                        }
+                                        response.sendRedirect("NovelServlet");
+                                }
+                        } else if (action.equals("YourNovelList")) {
+                                //get username from action
+                                String username = request.getParameter("username");
+                                //get all novels which have author's name = username inputted
+                                ArrayList<NovelDTO> nList = nDAO.getUserNovels(username);
+                                if (nList.size() > 0) {
+                                        request.setAttribute("novelList", nList);
+                                        request.setAttribute("novelFlag", "Your Novel(s)");
+                                        request.setAttribute("size", nList.size());
+                                } else {
+                                        request.setAttribute("NoNovelNameError", "Sorry, you have yet any novel in our database");
+                                }
+                                request.getRequestDispatcher("Homepage.jsp").forward(request, response);
+                        } else if (action.equals("UpdateNovelForm")) {
+                                String nid = request.getParameter("nid");
+                                NovelDTO novel = nDAO.get(nid);
+                                if (novel == null) {
+                                        request.setAttribute("noti", "Error update novel!!");
+                                        request.getRequestDispatcher("Error.jsp").forward(request, response);
+                                }
+                                request.setAttribute("n", novel);
+                                request.setAttribute("nName", novel.getNovelName());
+                                request.getRequestDispatcher("UpdateNovelForm.jsp").forward(request, response);
+                        } else if (action.equals("UpdateNovelDB")) {
+                                String novelID = request.getParameter("nid");
+                                String novelName = request.getParameter("novelName");
+                                novelName = new String(novelName.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
+                                String coverURL = this.getFileName(request.getPart("coverURL"));
+                                NovelDTO n = nDAO.get(novelID);
+                                NovelDTO no = null;
+                                ArrayList<NovelDTO> nLst = nDAO.getUserNovels(user.getUserName());
+                                if (novelName.equals("")) {
+                                        request.setAttribute("ERROR", "Novel Name can not be empty");
+                                        request.setAttribute("n", n);
+                                        request.setAttribute("nName", novelName);
+                                        request.getRequestDispatcher("update_novel_form.jsp").forward(request, response);
+                                } else {
+                                        for (NovelDTO novel : nLst) {
+                                                if (!novel.getNovelID().equals(n.getNovelID()) && novel.getNovelName().equalsIgnoreCase(novelName)) {
+                                                        no = new NovelDTO();
+                                                        no = novel;
+                                                }
+                                        }
+                                        if (no != null) {
+                                                request.setAttribute("ERROR", "This Novel Name has been used by another Novel create by you");
+                                                request.setAttribute("n", n);
+                                                request.setAttribute("nName", novelName);
+                                                request.getRequestDispatcher("update_novel_form.jsp").forward(request, response);
+                                        } else {
+                                                if (coverURL.equals("")) {
+                                                        coverURL = n.getCoverURL();
+                                                } else {
+                                                        if (!n.getCoverURL().equals("defaultCover.png")) {
+                                                                deleteCover(novelID);
+                                                        }
+                                                        coverURL = uploadFile(request, n.getNovelID());
+                                                }
+                                                n = new NovelDTO(novelID, novelName, user, coverURL);
+                                                nDAO.updateNovel(n);
+                                                response.sendRedirect("NovelServlet");
+                                        }
+                                }
+                        } else {
+                                request.setAttribute("noti", "Ooopss, something is wrong");
+                                request.getRequestDispatcher("Error.jsp").forward(request, response);
+>>>>>>> Stashed changes
                         }
                         response.sendRedirect("NovelServlet");
                     }
@@ -254,7 +426,11 @@ public class NovelServlet extends HttpServlet {
             request.setAttribute("TAGNOTFOUNDERROR", "Sorry, something went wrong");
             request.getRequestDispatcher("Error.jsp").forward(request, response);
         }
+<<<<<<< Updated upstream
     }
+=======
+        
+>>>>>>> Stashed changes
 
     private String getFileName(Part part) {
         for (String content : part.getHeader("content-disposition").split(";")) {
