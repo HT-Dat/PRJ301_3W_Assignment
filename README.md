@@ -4,8 +4,9 @@ A Novel website that allows users to have access to novels written by many other
 ## Background
 This is a group assignment for PRJ301 subject at FPT University.
 ## Team members 
-Ho Tien Dat
-Nguyen Quang Dung
+Ho Tien Dat&nbsp;
+Nguyen Quang Dung&nbsp;
+Pham Thanh Minh
 ## Require naming convention
 
 - Tên biến: camelCase 
